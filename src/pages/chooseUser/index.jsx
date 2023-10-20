@@ -4,7 +4,7 @@ import AddIcon from "../../assets/icons/Add.svg";
 import style from "./index.module.sass";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import AddNewUser from "../../components/modal/AddNewUser";
+import AddNewUser from "../../components/modal/addNewUser";
 import UserOption from "../../components/userOption";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../../app/features/usersSlice";

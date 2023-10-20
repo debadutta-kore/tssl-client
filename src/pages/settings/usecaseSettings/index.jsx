@@ -1,7 +1,7 @@
 import Button from "../../../components/button";
 import Card from "../../../components/card";
 import style from "./index.module.sass";
-import illustration from "../../../assets/illustration.svg";
+import illustration from "../../../assets/Illustration.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchAllUsecases } from "../../../app/features/usecaseSlice";

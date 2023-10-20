@@ -3,7 +3,7 @@ import Header from "../../components/header";
 import appIcon from "../../assets/app-icon.svg";
 import style from "./index.module.sass";
 import settings from "../../assets/icons/Settings.svg";
-import illustration from "../../assets/illustration.svg";
+import illustration from "../../assets/Illustration.svg";
 import Button from "../../components/button";
 import helpSupportIcon from "../../assets/icons/help.svg";
 import AddUseCase from "../../components/modal/addUseCase";

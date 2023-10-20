@@ -58,7 +58,7 @@ export const deleteUser = createAsyncThunk(
       const { users } = getState();
       if (
         typeof arg === "object" &&
-        arg.hasOwnProperty("userId") &&
+        arg.userId &&
         users.users.length > 0 &&
         !users.isLoading
       ) {

@@ -1,0 +1,28 @@
+@use '../../sass/_mixins.sass' as mixins
+
+.option
+    display: flex
+    gap: 10px
+    .select-user
+        width: 100%
+        display: flex
+        align-items: center
+        padding: 10px
+        gap: 10px
+        border-radius: 8px
+        cursor: pointer
+        img
+            display: none
+            margin-left: auto
+        &:hover
+            background: #F2F4F7
+
+    .radio:checked + .select-user
+        background: #F2F4F7
+        img
+            display: initial
+    .delete-user
+        @include mixins.button
+        margin-left: auto
+
+    

@@ -1,0 +1,36 @@
+@use '../../../sass/_mixins' as mixins
+.emptyUseCasecontainer
+    margin-inline: auto
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    .emptyUseCase
+        width: 40%
+        margin: auto
+        &__placeholder
+            display: flex
+            flex-direction: column
+            align-items: center
+            justify-content: center
+            gap: 12px
+            & > h3
+                font-size: 20px
+                font-weight: 600
+                text-align: center
+                color: #475467
+            & > h4
+                font-size: 18px
+                font-weight: 400
+                text-align: center
+                color: #475467
+        @include mixins.device-style('mobile')
+            width: 90%
+        @include mixins.device-style('tablet')
+            width: 60%
+.usecase-setting-list
+    display: flex
+    flex-direction: column
+    gap: 20px
+    li
+        height: fit-content

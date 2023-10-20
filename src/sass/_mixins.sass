@@ -1,0 +1,26 @@
+@use './_variables' as variables
+
+@mixin device-style($device) 
+  @if $device == 'desktop' 
+    // Styles for desktop
+    @media screen and (max-width: variables.$max-desktop)  and (min-width: variables.$min-desktop)
+      @content
+
+  @else if $device == 'tablet'
+    // Styles for tablet
+    @media screen and (min-width: variables.$min-tablet) and (max-width: variables.$max-tablet)
+      @content
+
+  @else if $device == 'mobile'
+    // Styles for mobile
+    @media screen and (max-width: variables.$max-mobile)
+      @content
+
+@mixin button()
+    outline: none
+    border: none
+    cursor: pointer
+    background: none
+    @content
+    
+    

@@ -1,0 +1,18 @@
+@use '../../../sass/_mixins.sass' as mixins
+.layout-container
+    margin-inline: auto
+    height: 100%
+    width: 40%
+    display: flex
+    align-items: center
+    justify-content: center
+    @include mixins.device-style('mobile')
+        width: 90%
+    @include mixins.device-style('tablet')
+        width: 60%
+body
+    background: url(/doughnut.svg) no-repeat center/contain #EBB8B8
+    @include mixins.device-style('tablet')
+        background-size: 100%
+    @include mixins.device-style('mobile')
+        background-size: 140%

@@ -1,0 +1,58 @@
+[
+  {
+    "id":"c48c38f828b94f8b8b510371e43d7312",
+    "name": "Drive-Thru Automation",
+    "icon": "./usecasesIcons/delivered.svg",
+    "background": "linear-gradient(137.55deg, #A48AFB -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+    "isComingSoon": false,
+    "webSdk": ""
+  },
+  {
+    "id": "bcbda25106214b33a86e6dbf60c4dd73",
+    "name": "Call-Center Automation",
+    "icon": "./usecasesIcons/agent-transfer.svg",
+    "background": "linear-gradient(137.55deg, #53B1FD -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+    "isComingSoon": false,
+    "webSdk": ""
+  },
+  {
+    "id": "6369892b122b47f7862deac2dda02051",
+    "name": "Food Safety",
+    "icon": "./usecasesIcons/safety.svg",
+    "background": "linear-gradient(137.55deg, #85E13A -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+    "isComingSoon": false,
+    "webSdk": ""
+  },
+  {
+    "id": "f33e156ee67f4f669e77c1587497f474",
+    "name": "Customer Service",
+    "icon": "./usecasesIcons/Support.svg",
+    "background": "linear-gradient(137.55deg, #FAC515 -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+    "isComingSoon": false,
+    "webSdk": ""
+  },
+  {
+    "id": "dc4f9775e3824742a73f6e1df98f5f04",
+    "name": "Operations Support",
+    "icon": "./usecasesIcons/service.svg",
+    "background": "linear-gradient(137.55deg, #F38744 -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+    "isComingSoon": false,
+    "webSdk": ""
+  },
+  {
+    "id": "e2d7acd63305427780c6104c8fae0d93",
+    "name": "GBM",
+    "icon": "./usecasesIcons/conversation-testing.svg",
+    "background": "linear-gradient(137.55deg, #2ED3B7 -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+    "isComingSoon": false,
+    "webSdk": ""
+  },
+  {
+    "id":"8391bf961cdf4ec8bd4aef11651326c6",
+    "name":"TBD",
+    "icon":"",
+    "background":"linear-gradient(137.55deg, #2ED3B7 -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+    "isComingSoon": true,
+    "webSdk":""
+  }
+]

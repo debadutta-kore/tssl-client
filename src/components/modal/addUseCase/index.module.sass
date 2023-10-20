@@ -1,0 +1,112 @@
+.modal-content
+    gap: 15px
+    .modal-header
+        display: flex
+        width: 100%
+        justify-content: space-between
+        align-items: center
+        &__title
+            font-size: 18px
+            vertical-align: middle
+            color:#101828
+            font-weight: 500
+        &__close
+            outline: none
+            border: none
+            background: none
+            cursor: pointer
+
+    .select-usecase-form
+        width: 100%
+        & > span
+            font-size: 14px
+            color: #344054
+            font-weight: 500
+        .dropdown-ctn
+            width: 100%
+            display: flex
+            position: relative
+            margin-top: 8px
+            padding: 10px 14px
+            border: 1px solid #D0D5DD
+            border-radius: 8px
+            user-select: none
+            cursor: pointer
+            &__select
+                width: 95%
+                font-size: 16px
+                &__placeholder
+                    color: #667085
+                &__name
+                    font-weight: 400
+                &__status
+                    color: #667085
+                    margin-left: 8px
+            .chavron-btn
+                background: none
+                border: none
+                outline: none
+                cursor: pointer
+                margin-left: auto
+                img
+                    vertical-align: middle
+        .dropdown-options
+            border-radius: 8px
+            border: 1px solid #F2F4F7
+            box-shadow: 0px 12px 16px -4px #10182814
+            width: 100%
+            height: fit-content
+            max-height: 190px
+            overflow-y: scroll
+            overflow-x: hidden
+            margin-top: 10px
+            padding: 5px
+            flex-direction: column
+            &__selection
+                padding: 10px 14px
+                display: flex
+                cursor: pointer
+                justify-content: space-between
+                img
+                    display: none
+                &:hover
+                    border-radius: 8px
+                    background: #F9FAFB
+                &__info
+                    &__name
+                        font-size: 16px
+                    &__status
+                        color:#667085
+                        margin-left: 8px
+                &.selected
+                    border-radius: 8px
+                    background: #F9FAFB
+                    img
+                        display: inline
+    .btn-container
+        width: 100%
+        display: flex
+        justify-content: space-between
+        .btn-cancel
+            width: 49%
+            color:#344054
+            background: white
+            border: 1px solid #D0D5DD
+            box-shadow: 0px 1px 2px 0px #1018280D
+        .btn-submit
+            width: 49%
+            &:disabled
+                border: 1px solid #EAECF0
+                background: #EAECF0
+                color: #D0D5DD
+                border: 1px solid #EAECF0
+                box-shadow: 0px 1px 2px 0px #1018280D
+    .bot-details-form
+        width: 100%
+        display: flex
+        flex-direction: column
+        gap: 10px
+        &__title
+            color: #101828
+            font-weight: 500
+            font-size: 18px

@@ -1,0 +1,29 @@
+@use '../../../sass/_mixins.sass' as mixins
+.setting-cards
+    width: 90%
+    margin-inline: auto
+    padding: 24px 20px
+    .card-heading
+        display: flex
+        gap: 32px
+        width: 100%
+        align-items: center
+        span
+            color: #101828
+            font-size: 15px
+            font-weight: 600
+            @include mixins.device-style('mobile')
+                font-size: 13px
+        & div:first-child
+            margin-right: auto
+            margin-block: auto
+        & div:last-child
+            display: flex
+            gap:10px
+            margin-left: auto
+            align-items: center
+            button
+                outline: none
+                border: none
+                background: none
+                cursor: pointer

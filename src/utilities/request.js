@@ -11,11 +11,11 @@ function request({url, method, data }) {
         method,
         headers:{
           'Content-Type': 'application/json',
-          Accept: 'applicaiton/json'
+          'Accept': 'application/json'
         },
         body: data && JSON.stringify(data),
-        withCredentials: true,
-        credentials: 'include'
+        credentials: 'include',
+        mode: 'cors'
       })
 }
 export default request;

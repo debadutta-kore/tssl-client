@@ -72,8 +72,7 @@ export const updateSession = createAsyncThunk('updateSession', async (arg, thunk
             url: '/auth/session',
             method: 'PUT',
             data: { 
-                userId: arg.userId,
-                name: arg.name
+                userId: arg.userId
             }
         });
         if (res.ok) {
@@ -122,7 +121,7 @@ const authSlice = createSlice({
             state.role = action.payload.data.role;
             state.isLoading = false;
             state.isLogin = true;
-            if(action.payload.role === 'admin') {
+            if(action.payload.data.role === 'admin') {
                 state.choosedUser = action.payload.data.choosedUser
                 state.name = action.payload.data.name;
             }
@@ -131,7 +130,7 @@ const authSlice = createSlice({
         builder.addCase(updateSession.fulfilled, (state,action) => {
             state.isLoading = false;
             state.choosedUser = true;
-            state.name = action.meta.arg.name;
+            state.name = action.payload.data.name;
         })
 
         builder.addMatcher(isAnyOf(login.rejected, logout.rejected, loginWithSession.rejected, updateSession.rejected), (state) => {

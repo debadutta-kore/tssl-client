@@ -12,13 +12,28 @@ import { Navigate, useLocation, useNavigate } from "react-router";
 import { useEffect } from "react";
 
 function Login() {
-  const { isLogin, role } = useSelector((state) => ({
+  const { isLogin, role, choosedUser } = useSelector((state) => ({
     isLogin: state.auth.isLogin,
     role: state.auth.role,
+    choosedUser : state.auth.choosedUser
   }));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  useEffect(() => {
+    if (isLogin) {
+      if (role === "admin") {
+        if(choosedUser) {
+          navigate("/home");
+        } else {
+          navigate("/choose");
+        }
+      } else {
+        navigate("/home");
+      }
+    }
+  }, [isLogin, navigate, role, choosedUser]);
+
   const onSubmitHandler = (values) => {
     dispatch(
       login({
@@ -32,15 +47,6 @@ function Login() {
     );
   };
 
-  useEffect(() => {
-    if (isLogin) {
-      if (role === "admin") {
-        navigate("/choose");
-      } else {
-        navigate("/home");
-      }
-    }
-  }, [isLogin, dispatch, navigate, role]);
 
   return !isLogin && !location?.state?.loginFailed ? (
     <Navigate to="/auth/check" replace={true} />

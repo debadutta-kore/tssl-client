@@ -8,8 +8,8 @@ import AddNewUser from "../../components/modal/addNewUser";
 import UserOption from "../../components/userOption";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../../app/features/usersSlice";
-import { chooseUser } from "../../app/features/useAuthSlice";
 import { useNavigate } from "react-router";
+import { updateSession } from "../../app/features/useAuthSlice";
 function ChooseUser() {
   const [addNewUser, setAddNewUser] = useState(false);
   const dispatch = useDispatch();
@@ -21,8 +21,9 @@ function ChooseUser() {
   },[dispatch]);
 
   const onSubmitHandler = (value)=>{
-    dispatch(chooseUser(value.user)),
-    navigate('/home')
+    dispatch(updateSession({userId: value.user})).then(()=>{
+      navigate('/home')
+    })
   }
   return (
     <Card>

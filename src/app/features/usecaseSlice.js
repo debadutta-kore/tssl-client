@@ -4,20 +4,22 @@ import request from "../../utilities/request";
 export const addUsecase = createAsyncThunk(
   "addUsecase",
   async (arg, thunkApi) => {
-    const { auth } = thunkApi.getState();
-    const res = await request({
-      url: "/usecase/add",
-      method: "POST",
-      data: {
-        usecaseId: arg.usecaseId,
-        userId: auth.userId,
-      },
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } else {
-      return thunkApi.rejectWithValue("Unable to add usecase");
+    try {
+      const res = await request({
+        url: "/usecase/add",
+        method: "POST",
+        data: {
+          usecaseId: arg.usecaseId,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return thunkApi.fulfillWithValue(data);
+      } else {
+        return thunkApi.rejectWithValue("Unable to add usecase");
+      }
+    } catch(err) {
+      return thunkApi.rejectWithValue("Something Went wrong");
     }
   },
   {
@@ -35,18 +37,18 @@ export const addUsecase = createAsyncThunk(
 export const deleteUsecase = createAsyncThunk(
   "deleteUsecase",
   async (arg, thunkApi) => {
-    const res = await request({
-      url: "/usecase/delete",
-      method: "DELETE",
-      data: {
-        id: arg.id,
-      },
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } else {
-      return thunkApi.rejectWithValue("Unable to delete this");
+    try {
+      const res = await request({
+        url: `/usecase/delete/${arg.id}`,
+        method: "DELETE",
+      });
+      if (res.ok) {
+        return thunkApi.fulfillWithValue();
+      } else {
+        return thunkApi.rejectWithValue("Unable to delete this");
+      }
+    } catch(err) {
+      return thunkApi.rejectWithValue('Something went wrong');
     }
   },
   {
@@ -64,27 +66,29 @@ export const deleteUsecase = createAsyncThunk(
 export const updateUsecase = createAsyncThunk(
   "updateUsecase",
   async (arg, thunkApi) => {
-    const { auth } = thunkApi.getState();
-    const res = await request({
-      url: "/usecase/update",
-      method: "PUT",
-      data: {
-        usecaseId: arg.usecaseId,
-        userId: auth.userId,
-        enable: arg.enable ? 1 : 0,
-      },
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } else {
-      return thunkApi.rejectWithValue("usecase is not updated yet");
+    try {
+      const res = await request({
+        url: "/usecase/update",
+        method: "PUT",
+        data: {
+          id: arg.id,
+          enable: arg.enable ? 1 : 0,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return thunkApi.fulfillWithValue(data);
+      } else {
+        return thunkApi.rejectWithValue("usecase is not updated yet");
+      }
+    } catch(err) {
+      return thunkApi.rejectWithValue('unable to update usecase')
     }
   },
   {
     condition: (arg, { getState }) => {
       const { usecases } = getState();
-      if (arg && arg.usecaseId && arg.enable && !usecases.isLoading) {
+      if (arg && arg.id && arg.enable && !usecases.isLoading) {
         return true;
       } else {
         return false;
@@ -95,24 +99,24 @@ export const updateUsecase = createAsyncThunk(
 
 export const fetchAllUsecases = createAsyncThunk(
   "fetchAllUsecases",
-  async (arg, thunkApi) => {
-    const { auth } = thunkApi.getState();
-    const res = await request({
-      url: "/usecase/all",
-      method: "POST",
-      data: {
-        userId: auth.userId,
-      },
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } else {
-      return thunkApi.rejectWithValue("unable to fetch data");
+  async (_, thunkApi) => {
+    try {
+      const res = await request({
+        url: "/usecase/all",
+        method: "GET"
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return thunkApi.fulfillWithValue(data);
+      } else {
+        return thunkApi.rejectWithValue("unable to fetch data");
+      }
+    } catch(err) {
+      return thunkApi.rejectWithValue("Unable to update data");
     }
   },
   {
-    condition: (arg, { getState }) => {
+    condition: (_, { getState }) => {
       const { usecases } = getState();
       if (usecases.usecases.length === 0 && !usecases.isLoading) {
         return true;

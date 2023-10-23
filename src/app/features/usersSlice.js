@@ -4,30 +4,34 @@ import request from "../../utilities/request";
 export const createUser = createAsyncThunk(
   "createUser",
   async (arg, thunkApi) => {
-    const res = await request({
-      url: "/user/add",
-      method: "POST",
-      data: {
-        email: arg.email,
-        password: arg.password,
-        name: arg.name,
-        role: "user",
-      },
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } else {
-      return thunkApi.rejectWithValue("not able to fetch all user");
+    try {
+      const res = await request({
+        url: "/account/user",
+        method: "POST",
+        data: {
+          email: arg.email,
+          password: arg.password,
+          name: arg.name
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return thunkApi.fulfillWithValue(data);
+      } else {
+        return thunkApi.rejectWithValue("not able to fetch all user");
+      }
+    } catch (err) {
+      return thunkApi.rejectWithValue('something went wrong')
     }
   },
   {
     condition: (arg, { getState }) => {
       const { users } = getState();
-      // eslint-disable-next-line no-prototype-builtins
       if (
         typeof arg === "object" &&
-        ["email", "password", "name"].every((key) => arg.hasOwnProperty(key)) &&
+        arg.email &&
+        arg.password &&
+        arg.name &&
         !users.isLoading
       ) {
         return true;
@@ -41,16 +45,18 @@ export const createUser = createAsyncThunk(
 export const deleteUser = createAsyncThunk(
   "deleteUser",
   async (arg, thunkApi) => {
-    const res = await request({
-      url: "/user/delete",
-      method: "DELETE",
-      data: { id: arg.userId },
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } else {
-      return thunkApi.rejectWithValue("unable to delete user");
+    try {
+      const res = await request({
+        url: `/account/user/${arg.userId}`,
+        method: "DELETE",
+      });
+      if (res.ok) {
+        return thunkApi.fulfillWithValue();
+      } else {
+        return thunkApi.rejectWithValue("unable to delete user");
+      }
+    } catch (err) {
+      return thunkApi.rejectWithValue('something went wrong');
     }
   },
   {
@@ -73,16 +79,19 @@ export const deleteUser = createAsyncThunk(
 export const fetchAllUser = createAsyncThunk(
   "fetchAllUsers",
   async (arg, thunkApi) => {
-    const res = await request({
-      url: "/user/all",
-      method: "POST",
-      data: { role: "user" },
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } else {
-      return thunkApi.rejectWithValue("not able to fetch all user");
+    try {
+      const res = await request({
+        url: "/account/user",
+        method: "GET",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return thunkApi.fulfillWithValue(data);
+      } else {
+        return thunkApi.rejectWithValue("not able to fetch all user");
+      }
+    } catch (err) {
+      return thunkApi.rejectWithValue('something went wrong');
     }
   },
   {

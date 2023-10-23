@@ -21,7 +21,8 @@ function ChooseUser() {
   },[dispatch]);
 
   const onSubmitHandler = (value)=>{
-    dispatch(updateSession({userId: value.user})).then(()=>{
+    console.log(value.user);
+    dispatch(updateSession(value.user)).then(()=>{
       navigate('/home')
     })
   }

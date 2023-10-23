@@ -9,30 +9,13 @@ import { emailSchema, passwordSchema } from "../../utilities/validateSchema";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../app/features/useAuthSlice";
 import { Navigate, useLocation, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 function Login() {
-  const { isLogin, role, choosedUser } = useSelector((state) => ({
-    isLogin: state.auth.isLogin,
-    role: state.auth.role,
-    choosedUser : state.auth.choosedUser
-  }));
+  const isLogin = useSelector((state) => (state.auth.isLogin));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  useEffect(() => {
-    if (isLogin) {
-      if (role === "admin") {
-        if(choosedUser) {
-          navigate("/home");
-        } else {
-          navigate("/choose");
-        }
-      } else {
-        navigate("/home");
-      }
-    }
-  }, [isLogin, navigate, role, choosedUser]);
 
   const onSubmitHandler = (values) => {
     dispatch(
@@ -44,7 +27,15 @@ function Login() {
           password: values.password,
         },
       })
-    );
+    ).then(unwrapResult).then((data)=>{
+      if (data.role === "admin") {
+        navigate("/choose");
+      } else {
+        navigate("/home");
+      }
+    }).catch(()=>{
+      console.log('login error');
+    })
   };
 
 

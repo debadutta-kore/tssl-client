@@ -17,7 +17,7 @@ const SplashScreen = () => {
       if(data.data.role === 'user') {
         navigate('/home');
       } else {
-        if(data.data.choosedUser) {
+        if(data.data.name) {
           navigate('/home');
         } else {
           navigate('/choose');

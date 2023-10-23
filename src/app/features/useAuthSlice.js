@@ -66,17 +66,16 @@ export const loginWithSession = createAsyncThunk('loginWithSession', async (arg,
     }
 })
 
-export const updateSession = createAsyncThunk('updateSession', async (arg, thunkApi) => {
+export const updateSession = createAsyncThunk('updateSession', async (userId, thunkApi) => {
     try {
         const res = await request({
             url: '/auth/session',
             method: 'PUT',
-            data: { 
-                userId: arg.userId
-            }
+            data: { userId }
         });
         if (res.ok) {
-            return thunkApi.fulfillWithValue();
+            const data = await res.json();
+            return thunkApi.fulfillWithValue(data);
         } else {
             return thunkApi.rejectWithValue('something went wrong');
         }
@@ -86,7 +85,7 @@ export const updateSession = createAsyncThunk('updateSession', async (arg, thunk
 }, {
     condition(arg, { getState }) {
         const { auth } = getState();
-        if (arg && arg.userId && !auth.chooseUser && !auth.isLoading) {
+        if (arg && !auth.isLoading) {
             return true;
         } else {
             return false;
@@ -122,14 +121,12 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.isLogin = true;
             if(action.payload.data.role === 'admin') {
-                state.choosedUser = action.payload.data.choosedUser
                 state.name = action.payload.data.name;
             }
         })
 
         builder.addCase(updateSession.fulfilled, (state,action) => {
             state.isLoading = false;
-            state.choosedUser = true;
             state.name = action.payload.data.name;
         })
 

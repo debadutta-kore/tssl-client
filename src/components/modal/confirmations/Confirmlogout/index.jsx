@@ -5,11 +5,16 @@ import logoutIcon from '../../../../assets/icons/logout-solid-rounded.svg';
 import Button from "../../../button";
 import style from "../index.module.sass";
 import { logout } from "../../../../app/features/useAuthSlice";
+import { toast } from "react-toastify";
 function ConfirmLogout(props) {
   const isLoading = useSelector((state)=>state.auth.isLoading);
   const dispatch = useDispatch();
   const logoutHandler = ()=>{
     dispatch(logout()).then(()=>{
+      toast("You're logged out! Logout was successful",{type:'success'});
+    }).catch(()=>{
+      toast("We couldn't log you out due to an error. Please try again later",{type:'error'});
+    }).finally(()=>{
       props.onClose();
     })
   }
@@ -23,7 +28,7 @@ function ConfirmLogout(props) {
       <span>You will be returned to the login screen.</span>
       <div className={style["logout-btn-container"]}>
         <Button onClick={props.onClose} disabled={isLoading}>Cancel</Button>
-        <Button onClick={logoutHandler}>Logout</Button>
+        <Button onClick={logoutHandler} isLoading={isLoading}>Logout</Button>
       </div> 
     </Confirm>
   );

@@ -5,12 +5,17 @@ import deleteIcon from '../../../../assets/icons/delete.svg';
 import Button from "../../../button";
 import style from "../index.module.sass";
 import { deleteUsecase } from "../../../../app/features/usecaseSlice";
+import { toast } from "react-toastify";
 function ConfirmDeleteUsecase(props) {
   const isLoading = useSelector((state)=>state.usecases.isLoading);
   const dispatch = useDispatch();
   const onDeleteHandler = ()=>{
     dispatch(deleteUsecase({id: props.delete.id}))
     .then(()=>{
+      toast('Use Case Deleted',{type:'success'})
+    }).catch(()=>{
+      toast('The use case could not be deleted due to an error. Please try again later',{type:'error'})
+    }).finally(()=>{
       props.onClose();
     })
   }
@@ -24,7 +29,7 @@ function ConfirmDeleteUsecase(props) {
       <span>Are you sure you want to remove {props.delete.name} ?</span>
       <div className={style["delete-btn-container"]}>
         <Button onClick={props.onClose} disabled={isLoading}>Cancel</Button>
-        <Button onClick={onDeleteHandler}>Remove</Button>
+        <Button onClick={onDeleteHandler} isLoading={isLoading}>Remove</Button>
       </div> 
     </Confirm>
   );

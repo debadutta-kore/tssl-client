@@ -17,6 +17,7 @@ function InputField(props) {
               }
               type={props.type}
               placeholder={props.placeholder}
+              required={props.required}
               {...field}
               id={id}
             />

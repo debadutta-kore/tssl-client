@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../app/features/useAuthSlice";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 function Login() {
   const isLogin = useSelector((state) => (state.auth.isLogin));
@@ -17,7 +18,7 @@ function Login() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const onSubmitHandler = (values) => {
+  const onSubmitHandler = (values, action) => {
     dispatch(
       login({
         url: "/auth/login",
@@ -27,14 +28,25 @@ function Login() {
           password: values.password,
         },
       })
-    ).then(unwrapResult).then((data)=>{
+    ).then(unwrapResult).then((data) => {
+      toast("Welcome back! You've successfully logged in", { type: 'success' })
       if (data.role === "admin") {
         navigate("/choose");
       } else {
         navigate("/home");
       }
-    }).catch(()=>{
-      console.log('login error');
+    }).catch((data) => {
+      if (typeof data === 'object') {
+        if (data.password) {
+          action.setFieldError('password', data.password);
+        } else {
+          action.setFieldError('email', data.email);
+        }
+      } else {
+        toast("Something Went Wrong", { type: 'error' })
+      }
+    }).finally(() => {
+      action.setSubmitting(false);
     })
   };
 
@@ -56,24 +68,28 @@ function Login() {
           password: passwordSchema,
         })}
       >
-        <Form className={style["loginForm"]}>
-          <InputField
-            type="email"
-            name="email"
-            label="Email ID"
-            placeholder="Enter Email ID"
-          />
-          <InputField
-            type="password"
-            name="password"
-            label="Password"
-            placeholder="Enter Password"
-          />
-          {/* <Link to="../reset" style={{ marginLeft: "auto" }}>
+        {({ isValid, isSubmitting }) => (
+          <Form className={style["loginForm"]}>
+            <InputField
+              type="email"
+              name="email"
+              label="Email ID"
+              placeholder="Enter Email ID"
+              required={true}
+            />
+            <InputField
+              type="password"
+              name="password"
+              label="Password"
+              placeholder="Enter Password"
+              required={true}
+            />
+            {/* <Link to="../reset" style={{ marginLeft: "auto" }}>
             Reset Password?
           </Link> */}
-          <Button type="sumbmit">Login</Button>
-        </Form>
+            <Button type="sumbmit" isLoading={isSubmitting} disabled={!isValid}>Login</Button>
+          </Form>
+        )}
       </Formik>
     </Card>
   );

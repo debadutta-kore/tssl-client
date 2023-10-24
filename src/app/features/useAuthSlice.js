@@ -7,8 +7,9 @@ export const login = createAsyncThunk('login', async (arg, thunkApi) => {
         if (res.ok) {
             const data = await res.json();
             return thunkApi.fulfillWithValue(data);
-        } else {
-            return thunkApi.rejectWithValue('something went wrong');
+        } else if(res.status === 400) { 
+            const data = await res.json();
+            return thunkApi.rejectWithValue(data);
         }
     } catch (err) {
         return thunkApi.rejectWithValue('Internal Server Error');

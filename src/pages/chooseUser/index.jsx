@@ -14,18 +14,27 @@ function ChooseUser() {
   const [addNewUser, setAddNewUser] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {users, userId} = useSelector((state) => ({users:state.users.users, userId: state.auth.userId}));
-  
-  useEffect(()=>{
-    dispatch(fetchAllUser());
-  },[dispatch]);
+  const users = useSelector((state) => state.users.users);
 
-  const onSubmitHandler = (value)=>{
-    console.log(value.user);
-    dispatch(updateSession(value.user)).then(()=>{
-      navigate('/home')
-    })
-  }
+  useEffect(() => {
+    dispatch(fetchAllUser());
+  }, [dispatch]);
+
+  const onSubmitHandler = (value, action) => {
+    const userId = value.user.trim();
+    if (userId) {
+      dispatch(updateSession(userId))
+        .then(() => {
+          navigate("/home");
+          action.setSubmitting(false);
+        })
+        .catch(() => {
+          action.setSubmitting(false);
+        });
+    } else {
+      action.setFieldError('user','error');
+    }
+  };
   return (
     <Card>
       {addNewUser && <AddNewUser onClose={() => setAddNewUser(!addNewUser)} />}
@@ -36,19 +45,28 @@ function ChooseUser() {
           <span>Add User</span>
         </Button>
       </div>
-      <Formik initialValues={{user: userId}} onSubmit={onSubmitHandler}>
-        <Form className={style["choose-user-form"]}>
-          {
-            users.length > 0 ?
+      <Formik initialValues={{ user: '' }} onSubmit={onSubmitHandler}>
+        {({ isSubmitting, values }) => (
+          <Form className={style["choose-user-form"]}>
+            {users.length > 0 ? (
               <ul className={style["users-list"]}>
-                {users.map((user) => <UserOption name={user.name} value={user.id} key={user.id} />)}
-              </ul> : <div className={style["choose-user-placeholder"]}>
+                {users.map((user) => (
+                  <UserOption name={user.name} value={user.id} key={user.id} />
+                ))}
+              </ul>
+            ) : (
+              <div className={style["choose-user-placeholder"]}>
                 <h3>No Users Added Yet.</h3>
-                <span>Please add user by clicking on the “+ Add User” button.</span>
+                <span>
+                  Please add user by clicking on the “+ Add User” button.
+                </span>
               </div>
-          }
-          <Button type="submit">Proceed</Button>
-        </Form>
+            )}
+            <Button type="submit" disabled={!values.user.trim()} isLoading={isSubmitting}>
+              Proceed
+            </Button>
+          </Form>
+        )}
       </Formik>
     </Card>
   );

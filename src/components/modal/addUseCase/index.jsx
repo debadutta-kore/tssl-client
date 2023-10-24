@@ -9,6 +9,7 @@ import { useState } from "react";
 import usecasesDb from "../../../utilities/static-usecases.json";
 import { useDispatch, useSelector } from "react-redux";
 import { addUsecase } from "../../../app/features/usecaseSlice";
+import { toast } from "react-toastify";
 
 function AddUseCase(props) {
   const [openDropDown, setOpenDropDown] = useState(false);
@@ -25,6 +26,10 @@ function AddUseCase(props) {
     dispatch(addUsecase({
       usecaseId: selectedUseCase.id
     })).then(()=>{
+      toast(`${selectedUseCase.name} Use Case Added Successfully`,{type:'success'})
+    }).catch(()=>{
+      toast(`${selectedUseCase.name} use case could not be added due to an error`,{type:'error'})
+    }).finally(()=>{
       props.onClose();
     });
   }
@@ -112,7 +117,7 @@ function AddUseCase(props) {
           <Button className={style["btn-cancel"]} onClick={props.onClose} disabled={isLoading}>
             Cancel
           </Button>
-          <Button className={style["btn-submit"]} onClick={onSaveUsecase}>Save</Button>
+          <Button className={style["btn-submit"]} onClick={onSaveUsecase} disabled={!selectedUseCase} isLoading={isLoading}>Save</Button>
         </div>
       </Card>
     </Modal>

@@ -23,7 +23,7 @@ function AddNewUser(props) {
     .then(()=>{
       toast(`User ${value.fullName} Added Successfully`,{type:'success'})
     }).catch(()=>{
-      toast(`Unable to add ${value.fullName} as a user`,{type:'success'})
+      toast(`Unable to add ${value.fullName} as a user`,{type:'error'})
     }).finally(()=>{
       action.setSubmitting(false)
       props.onClose();

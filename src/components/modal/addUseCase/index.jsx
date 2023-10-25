@@ -7,13 +7,14 @@ import Button from "../../button";
 import Modal from "..";
 import { useState } from "react";
 import usecasesDb from "../../../utilities/static-usecases.json";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUsecase } from "../../../app/features/usecaseSlice";
 import { toast } from "react-toastify";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddUseCase(props) {
   const [openDropDown, setOpenDropDown] = useState(false);
+  const usecases = useSelector((state)=>state.usecases.usecases);
   const [selectedUseCase, setSelectedUseCase] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -22,6 +23,20 @@ function AddUseCase(props) {
     setSelectedUseCase(usecase);
     setOpenDropDown(false);
   }
+
+  const notAddedUsecases = usecasesDb.filter(({id})=>{
+    if(usecases.length > 0) {
+      for(const {usecaseId} of usecases) {
+        if(usecaseId === id) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    } else {
+      return true;
+    }
+  });
   
   const onSaveUsecase = ()=>{
     setIsLoading(true);
@@ -38,6 +53,7 @@ function AddUseCase(props) {
       props.onClose();
     });
   }
+  
 
   return (
     <Modal>
@@ -90,7 +106,7 @@ function AddUseCase(props) {
             className={style["dropdown-options"]}
             style={{ display: openDropDown ? "flex" : "none" }}
           >
-            {usecasesDb.map((usecase) => (
+            {notAddedUsecases.map((usecase) => (
               <li
                 className={(selectedUseCase && usecase.id === selectedUseCase.id) ? `${style["dropdown-options__selection"]} ${style['selected']}`: style["dropdown-options__selection"]}
                 key={usecase.id}

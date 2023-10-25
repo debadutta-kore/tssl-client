@@ -18,7 +18,7 @@ export const addUsecase = createAsyncThunk(
       } else {
         return thunkApi.rejectWithValue("Unable to add usecase");
       }
-    } catch(err) {
+    } catch (err) {
       return thunkApi.rejectWithValue("Something Went wrong");
     }
   },
@@ -47,8 +47,8 @@ export const deleteUsecase = createAsyncThunk(
       } else {
         return thunkApi.rejectWithValue("Unable to delete this");
       }
-    } catch(err) {
-      return thunkApi.rejectWithValue('Something went wrong');
+    } catch (err) {
+      return thunkApi.rejectWithValue("Something went wrong");
     }
   },
   {
@@ -63,47 +63,13 @@ export const deleteUsecase = createAsyncThunk(
   }
 );
 
-export const updateUsecase = createAsyncThunk(
-  "updateUsecase",
-  async (arg, thunkApi) => {
-    try {
-      const res = await request({
-        url: "/usecase/update",
-        method: "PUT",
-        data: {
-          id: arg.id,
-          enable: arg.enable ? 1 : 0,
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return thunkApi.fulfillWithValue(data);
-      } else {
-        return thunkApi.rejectWithValue("usecase is not updated yet");
-      }
-    } catch(err) {
-      return thunkApi.rejectWithValue('unable to update usecase')
-    }
-  },
-  {
-    condition: (arg, { getState }) => {
-      const { usecases } = getState();
-      if (arg && arg.id && arg.enable && !usecases.isLoading) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-  }
-);
-
 export const fetchAllUsecases = createAsyncThunk(
   "fetchAllUsecases",
   async (_, thunkApi) => {
     try {
       const res = await request({
         url: "/usecase/all",
-        method: "GET"
+        method: "GET",
       });
       if (res.ok) {
         const data = await res.json();
@@ -111,7 +77,7 @@ export const fetchAllUsecases = createAsyncThunk(
       } else {
         return thunkApi.rejectWithValue("unable to fetch data");
       }
-    } catch(err) {
+    } catch (err) {
       return thunkApi.rejectWithValue("Unable to update data");
     }
   },
@@ -124,6 +90,37 @@ export const fetchAllUsecases = createAsyncThunk(
         return false;
       }
     },
+  }
+);
+
+export const updateUsecase = createAsyncThunk(
+  "updateUsecase",
+  async (arg, thunkApi) => {
+    try {
+      const res = await request({
+        url: "/usecase/update",
+        method:'PUT',
+        data: { enable: arg.enable ? 1 : 0, usecaseId: arg.id },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return thunkApi.fulfillWithValue(data);
+      } else {
+        return thunkApi.rejectWithValue("Unable to process your request");
+      }
+    } catch (err) {
+      return thunkApi.rejectWithValue("Unable to process your request");
+    }
+  },
+  {
+    condition(arg, { getState }) {
+      const { usecases } = getState();
+      if (arg && arg.id && typeof arg.enable !== "undefined" && !usecases.isLoading) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 );
 
@@ -140,29 +137,29 @@ const usecaseSlice = createSlice({
       state.usecases.push(action.payload);
       state.isLoading = false;
     });
+
     builder.addCase(deleteUsecase.fulfilled, (state, action) => {
       state.usecases = state.usecases.filter(
         (usecase) => usecase.id !== action.meta.arg.id
       );
       state.isLoading = false;
     });
+
     builder.addCase(updateUsecase.fulfilled, (state, action) => {
       state.usecases = state.usecases.map((usecase) => {
-        if (usecase.usecaseId === action.meta.arg.usecaseId) {
-          return {
-            ...usecase,
-            enable: action.meta.arg.enable,
-          };
-        } else {
-          return usecase;
+        if (usecase.usecaseId === action.meta.arg.id) {
+          usecase.enable = action.meta.arg.enable ? 1: 0;
         }
+        return usecase
       });
       state.isLoading = false;
     });
+
     builder.addCase(fetchAllUsecases.fulfilled, (state, action) => {
       state.usecases = action.payload;
       state.isLoading = false;
     });
+
     builder.addMatcher(
       isAnyOf(
         addUsecase.rejected,
@@ -174,6 +171,7 @@ const usecaseSlice = createSlice({
         state.isLoading = false;
       }
     );
+
     builder.addMatcher(
       isAnyOf(
         addUsecase.pending,

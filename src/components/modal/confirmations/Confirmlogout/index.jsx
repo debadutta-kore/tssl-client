@@ -6,11 +6,14 @@ import Button from "../../../button";
 import style from "../index.module.sass";
 import { logout } from "../../../../app/features/useAuthSlice";
 import { toast } from "react-toastify";
+import { unwrapResult } from "@reduxjs/toolkit";
 function ConfirmLogout(props) {
   const isLoading = useSelector((state)=>state.auth.isLoading);
   const dispatch = useDispatch();
   const logoutHandler = ()=>{
-    dispatch(logout()).then(()=>{
+    dispatch(logout())
+    .then(unwrapResult)
+    .then(()=>{
       toast("You're logged out! Logout was successful",{type:'success'});
     }).catch(()=>{
       toast("We couldn't log you out due to an error. Please try again later",{type:'error'});

@@ -6,13 +6,16 @@ import Button from "../../../button";
 import style from "../index.module.sass";
 import { deleteUser } from "../../../../app/features/usersSlice";
 import { toast } from "react-toastify";
+import { unwrapResult } from "@reduxjs/toolkit";
 function ConfirmDeleteUser(props) {
   const dispatch = useDispatch()
   const isLoading = useSelector((state)=>state.users.isLoading);
   const onRemoveHandler = ()=>{
     dispatch(deleteUser({
         userId: props.delete.id
-    })).then(()=>{
+    }))
+    .then(unwrapResult)
+    .then(()=>{
       toast('The user has been successfully deleted',{
         type:'success'
       });

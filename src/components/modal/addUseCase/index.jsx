@@ -7,14 +7,15 @@ import Button from "../../button";
 import Modal from "..";
 import { useState } from "react";
 import usecasesDb from "../../../utilities/static-usecases.json";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUsecase } from "../../../app/features/usecaseSlice";
 import { toast } from "react-toastify";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddUseCase(props) {
   const [openDropDown, setOpenDropDown] = useState(false);
   const [selectedUseCase, setSelectedUseCase] = useState();
-  const isLoading = useSelector((state)=>state.usecases.isLoading);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   
   const onSelectUsecase = (usecase)=>{
@@ -23,13 +24,17 @@ function AddUseCase(props) {
   }
   
   const onSaveUsecase = ()=>{
+    setIsLoading(true);
     dispatch(addUsecase({
       usecaseId: selectedUseCase.id
-    })).then(()=>{
+    }))
+    .then(unwrapResult)
+    .then(()=>{
       toast(`${selectedUseCase.name} Use Case Added Successfully`,{type:'success'})
     }).catch(()=>{
       toast(`${selectedUseCase.name} use case could not be added due to an error`,{type:'error'})
     }).finally(()=>{
+      setIsLoading(false);
       props.onClose();
     });
   }

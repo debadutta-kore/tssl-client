@@ -29,7 +29,7 @@ function Login() {
         },
       })
     ).then(unwrapResult).then((data) => {
-      toast("Welcome back! You've successfully logged in", { type: 'success' })
+      toast("Login successful", { type: 'success' })
       if (data.role === "admin") {
         navigate("/choose");
       } else {

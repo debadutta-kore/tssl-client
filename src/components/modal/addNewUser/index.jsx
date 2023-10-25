@@ -10,6 +10,7 @@ import { emailSchema, fullNameSchema, passwordSchema } from "../../../utilities/
 import { useDispatch } from "react-redux";
 import { createUser } from "../../../app/features/usersSlice";
 import { toast } from "react-toastify";
+import { unwrapResult } from "@reduxjs/toolkit";
 function AddNewUser(props) {
   const dispatch = useDispatch();
   const onAddUser = (value,action) => {
@@ -17,7 +18,9 @@ function AddNewUser(props) {
       email: value.email,
       name: value.fullName,
       password: value.password,
-    })).then(()=>{
+    }))
+    .then(unwrapResult)
+    .then(()=>{
       toast(`User ${value.fullName} Added Successfully`,{type:'success'})
     }).catch(()=>{
       toast(`Unable to add ${value.fullName} as a user`,{type:'success'})

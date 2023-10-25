@@ -6,11 +6,13 @@ import Button from "../../../button";
 import style from "../index.module.sass";
 import { deleteUsecase } from "../../../../app/features/usecaseSlice";
 import { toast } from "react-toastify";
+import { unwrapResult } from "@reduxjs/toolkit";
 function ConfirmDeleteUsecase(props) {
   const isLoading = useSelector((state)=>state.usecases.isLoading);
   const dispatch = useDispatch();
   const onDeleteHandler = ()=>{
     dispatch(deleteUsecase({id: props.delete.id}))
+    .then(unwrapResult)
     .then(()=>{
       toast('Use Case Deleted',{type:'success'})
     }).catch(()=>{

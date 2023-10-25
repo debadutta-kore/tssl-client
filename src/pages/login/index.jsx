@@ -7,7 +7,7 @@ import InputField from "../../components/InputField";
 import * as Yup from "yup";
 import { emailSchema, passwordSchema } from "../../utilities/validateSchema";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../app/features/useAuthSlice";
+import { login } from "../../app/features/authSlice";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";

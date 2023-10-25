@@ -5,7 +5,7 @@ import "./index.sass";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "./pages/login/index.jsx";
 import AuthLayout from "./components/layout/authLayout/index.jsx";
-import ProtectRoute from "./components/protectRoute/index.jsx";
+import ProtectRoute from "./components/hoc/protectRoute/index.jsx";
 import { store } from "./app/store.js";
 import { Provider } from "react-redux";
 import SplashScreen from "./pages/splashScreen/index.jsx";
@@ -73,6 +73,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       limit={2}
       hideProgressBar={true}
       closeButton={false}
+      style={{bottom: '15%'}}
     />
       <RouterProvider router={router} />
   </Provider>

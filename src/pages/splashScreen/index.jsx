@@ -3,7 +3,7 @@ import appIcon from "../../assets/app-icon.svg";
 import style from "./index.module.sass";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { loginWithSession } from "../../app/features/useAuthSlice";
+import { loginWithSession } from "../../app/features/authSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 const SplashScreen = () => {
   const navigate = useNavigate();

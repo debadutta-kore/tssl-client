@@ -4,7 +4,7 @@ import closeIcon from "../../../../assets/icons/close-modal.svg";
 import logoutIcon from '../../../../assets/icons/logout-solid-rounded.svg';
 import Button from "../../../button";
 import style from "../index.module.sass";
-import { logout } from "../../../../app/features/useAuthSlice";
+import { logout } from "../../../../app/features/authSlice";
 import { toast } from "react-toastify";
 import { unwrapResult } from "@reduxjs/toolkit";
 function ConfirmLogout(props) {

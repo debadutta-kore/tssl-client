@@ -9,7 +9,7 @@ import UserOption from "../../components/userOption";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../../app/features/usersSlice";
 import { useNavigate } from "react-router";
-import { updateSession } from "../../app/features/useAuthSlice";
+import { updateSession } from "../../app/features/authSlice";
 function ChooseUser() {
   const [addNewUser, setAddNewUser] = useState(false);
   const dispatch = useDispatch();

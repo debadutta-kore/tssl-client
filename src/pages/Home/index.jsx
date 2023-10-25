@@ -69,7 +69,7 @@ function Home() {
           </Button>
         </div>
       </div>: <ul className={style['usecases-grid-container']}>
-        {usecases.map((usecase)=>(<li key={usecase.id} className={style['usecase-item']}><UseCaseCard {...usecase}/></li>))}
+        {usecases.filter(({enable})=>(enable===1)).map((usecase)=>(<li key={usecase.id} className={style['usecase-item']}><UseCaseCard {...usecase}/></li>))}
         </ul>}
     </>
   );

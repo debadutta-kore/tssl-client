@@ -8,12 +8,17 @@
         gap: 32px
         width: 100%
         align-items: center
-        span
-            color: #101828
-            font-size: 15px
-            font-weight: 600
-            @include mixins.device-style('mobile')
-                font-size: 13px
+        .info
+            .name
+                color: #101828
+                font-size: 15px
+                font-weight: 600
+                @include mixins.device-style('mobile')
+                    font-size: 13px
+            .status
+                font-size: 15px
+                font-weight: 400
+                margin-left: 8px
         & div:first-child
             margin-right: auto
             margin-block: auto

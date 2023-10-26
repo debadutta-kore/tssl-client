@@ -9,7 +9,7 @@ import UploadedImage from "./uploadedImage";
 function HelpSupport(props) {
   return (
     <Modal>
-      <ModalBody>
+      <ModalBody style={{marginBlock:'10rem'}}>
         <Card>
           <div className={style["choose-user-header"]}>
             <h2>Help & Support</h2>

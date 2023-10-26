@@ -4,7 +4,7 @@ import closeModal from "../../../assets/icons/close-modal.svg";
 import chavronIcon from "../../../assets/icons/chavron.svg";
 import selectIcon from "../../../assets/icons/select.svg";
 import Button from "../../button";
-import Modal from "..";
+import Modal, { ModalBody } from "..";
 import { useState } from "react";
 import usecasesDb from "../../../utilities/static-usecases.json";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,20 +14,20 @@ import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddUseCase(props) {
   const [openDropDown, setOpenDropDown] = useState(false);
-  const usecases = useSelector((state)=>state.usecases.usecases);
+  const usecases = useSelector((state) => state.usecases.usecases);
   const [selectedUseCase, setSelectedUseCase] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  
-  const onSelectUsecase = (usecase)=>{
+
+  const onSelectUsecase = (usecase) => {
     setSelectedUseCase(usecase);
     setOpenDropDown(false);
   }
 
-  const notAddedUsecases = usecasesDb.filter(({id})=>{
-    if(usecases.length > 0) {
-      for(const {usecaseId} of usecases) {
-        if(usecaseId === id) {
+  const notAddedUsecases = usecasesDb.filter(({ id }) => {
+    if (usecases.length > 0) {
+      for (const { usecaseId } of usecases) {
+        if (usecaseId === id) {
           return false;
         } else {
           return true;
@@ -37,110 +37,112 @@ function AddUseCase(props) {
       return true;
     }
   });
-  
-  const onSaveUsecase = ()=>{
+
+  const onSaveUsecase = () => {
     setIsLoading(true);
     dispatch(addUsecase({
       usecaseId: selectedUseCase.id
     }))
-    .then(unwrapResult)
-    .then(()=>{
-      toast(`${selectedUseCase.name} Use Case Added Successfully`,{type:'success'})
-    }).catch(()=>{
-      toast(`${selectedUseCase.name} use case could not be added due to an error`,{type:'error'})
-    }).finally(()=>{
-      setIsLoading(false);
-      props.onClose();
-    });
+      .then(unwrapResult)
+      .then(() => {
+        toast(`${selectedUseCase.name} Use Case Added Successfully`, { type: 'success' })
+      }).catch(() => {
+        toast(`${selectedUseCase.name} use case could not be added due to an error`, { type: 'error' })
+      }).finally(() => {
+        setIsLoading(false);
+        props.onClose();
+      });
   }
-  
+
 
   return (
     <Modal>
-      <Card className={style["modal-content"]}>
-        <div className={style["modal-header"]}>
-          <h3 className={style["modal-header__title"]}>Add Use Case</h3>
-          <button
-            className={style["modal-header__close"]}
-            onClick={props.onClose}
-            disabled={isLoading}
-          >
-            <img src={closeModal} width={40} height={40} alt="close-modal" />
-          </button>
-        </div>
-        <div className={style["select-usecase-form"]}>
-          <span>Use Case</span>
-          <div
-            className={style["dropdown-ctn"]}
-            onClick={() => setOpenDropDown(!openDropDown)}
-          >
-            <div className={style["dropdown-ctn__select"]}>
-              <span
-                className={style["dropdown-ctn__select__placeholder"]}
-                style={{ display: !selectedUseCase ? "initial" : "none" }}
-              >
-                Select use case
-              </span>
-              <span
-                className={style["dropdown-ctn__select__name"]}
-                style={{ display: selectedUseCase ? "initial" : "none" }}
-              >
-                {selectedUseCase && selectedUseCase.name}
-              </span>
-              {<span
-                className={style["dropdown-ctn__select__status"]}
-                style={{ display: selectedUseCase && selectedUseCase.isComingSoon ? "initial" : "none" }}
-              >
-                (Coming Soon)
-              </span>}
-            </div>
+      <ModalBody>
+        <Card className={style["modal-content"]}>
+          <div className={style["modal-header"]}>
+            <h3 className={style["modal-header__title"]}>Add Use Case</h3>
             <button
-              className={style["chavron-btn"]}
-              type="button"
-              onClick={() => setOpenDropDown(!openDropDown)}
+              className={style["modal-header__close"]}
+              onClick={props.onClose}
+              disabled={isLoading}
             >
-              <img src={chavronIcon} width={10} height={10} alt="chavron" />
+              <img src={closeModal} width={40} height={40} alt="close-modal" />
             </button>
           </div>
-          <ul
-            className={style["dropdown-options"]}
-            style={{ display: openDropDown ? "flex" : "none" }}
-          >
-            {notAddedUsecases.map((usecase) => (
-              <li
-                className={(selectedUseCase && usecase.id === selectedUseCase.id) ? `${style["dropdown-options__selection"]} ${style['selected']}`: style["dropdown-options__selection"]}
-                key={usecase.id}
-                onClick={onSelectUsecase.bind(null,{id: usecase.id, name: usecase.name, isComingSoon: usecase.isComingSoon})}
+          <div className={style["select-usecase-form"]}>
+            <span>Use Case</span>
+            <div
+              className={style["dropdown-ctn"]}
+              onClick={() => setOpenDropDown(!openDropDown)}
+            >
+              <div className={style["dropdown-ctn__select"]}>
+                <span
+                  className={style["dropdown-ctn__select__placeholder"]}
+                  style={{ display: !selectedUseCase ? "initial" : "none" }}
+                >
+                  Select use case
+                </span>
+                <span
+                  className={style["dropdown-ctn__select__name"]}
+                  style={{ display: selectedUseCase ? "initial" : "none" }}
+                >
+                  {selectedUseCase && selectedUseCase.name}
+                </span>
+                {<span
+                  className={style["dropdown-ctn__select__status"]}
+                  style={{ display: selectedUseCase && selectedUseCase.isComingSoon ? "initial" : "none" }}
+                >
+                  (Coming Soon)
+                </span>}
+              </div>
+              <button
+                className={style["chavron-btn"]}
+                type="button"
+                onClick={() => setOpenDropDown(!openDropDown)}
               >
-                <div className={style["dropdown-options__selection__info"]}>
-                  <span
-                    className={style["dropdown-options__selection__info__name"]}
-                  >
-                    {usecase.name}
-                  </span>
-                  <span
-                    className={
-                      style["dropdown-options__selection__info__status"]
-                    }
-                    style={{
-                      visibility: usecase.isComingSoon ? "visible" : "hidden",
-                    }}
-                  >
-                    (Coming Soon)
-                  </span>
-                </div>
-                <img src={selectIcon} alt="selected icon" />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className={style["btn-container"]}>
-          <Button className={style["btn-cancel"]} onClick={props.onClose} disabled={isLoading}>
-            Cancel
-          </Button>
-          <Button className={style["btn-submit"]} onClick={onSaveUsecase} disabled={!selectedUseCase} isLoading={isLoading}>Save</Button>
-        </div>
-      </Card>
+                <img src={chavronIcon} width={10} height={10} alt="chavron" />
+              </button>
+            </div>
+            <ul
+              className={style["dropdown-options"]}
+              style={{ display: openDropDown ? "flex" : "none" }}
+            >
+              {notAddedUsecases.map((usecase) => (
+                <li
+                  className={(selectedUseCase && usecase.id === selectedUseCase.id) ? `${style["dropdown-options__selection"]} ${style['selected']}` : style["dropdown-options__selection"]}
+                  key={usecase.id}
+                  onClick={onSelectUsecase.bind(null, { id: usecase.id, name: usecase.name, isComingSoon: usecase.isComingSoon })}
+                >
+                  <div className={style["dropdown-options__selection__info"]}>
+                    <span
+                      className={style["dropdown-options__selection__info__name"]}
+                    >
+                      {usecase.name}
+                    </span>
+                    <span
+                      className={
+                        style["dropdown-options__selection__info__status"]
+                      }
+                      style={{
+                        visibility: usecase.isComingSoon ? "visible" : "hidden",
+                      }}
+                    >
+                      (Coming Soon)
+                    </span>
+                  </div>
+                  <img src={selectIcon} alt="selected icon" />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={style["btn-container"]}>
+            <Button className={style["btn-cancel"]} onClick={props.onClose} disabled={isLoading}>
+              Cancel
+            </Button>
+            <Button className={style["btn-submit"]} onClick={onSaveUsecase} disabled={!selectedUseCase} isLoading={isLoading}>Save</Button>
+          </div>
+        </Card>
+      </ModalBody>
     </Modal>
   );
 }

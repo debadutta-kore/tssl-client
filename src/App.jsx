@@ -5,6 +5,7 @@ import Settings from "./pages/settings";
 import UseCaseSettings from "./pages/settings/usecaseSettings";
 import AccessControls from "./pages/settings/accessControls";
 import SettingsLayout from './components/layout/settingsLayout';
+import ChatLayout from "./components/layout/chatLayout";
 function App() {
   return (<>
     <Routes>
@@ -15,6 +16,7 @@ function App() {
           <Route path='usecases' element={<UseCaseSettings />} />
           <Route path='access' element={<AccessControls />} />
         </Route>
+        <Route path="/chat/:id" element={<ChatLayout/>} />
       </Route>
     </Routes>
   </>)

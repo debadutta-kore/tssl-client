@@ -2,17 +2,13 @@
 .layout-container
     margin-inline: auto
     height: 100%
-    width: 40%
+    width: 80%
     display: flex
     align-items: center
     justify-content: center
-    @include mixins.device-style('mobile')
-        width: 90%
-    @include mixins.device-style('tablet')
+    @include mixins.device-style('sm')
         width: 60%
-body
-    background: url(/doughnut.svg) no-repeat center/contain #EBB8B8
-    @include mixins.device-style('tablet')
-        background-size: 100%
-    @include mixins.device-style('mobile')
-        background-size: 140%
+    @include mixins.device-style('md')
+        width: 50%
+    @include mixins.device-style('lg')
+        width: 40%

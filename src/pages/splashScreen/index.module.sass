@@ -1,4 +1,3 @@
-@use '../../sass/_mixins.sass' as mixins
 .splash-screen-container
     display: flex
     align-items: center
@@ -9,9 +8,3 @@
     h1
         color:#111827
         font-size: 30px
-body
-    background: url(/doughnut.svg) no-repeat center/contain #EBB8B8
-    @include mixins.device-style('tablet')
-        background-size: 100%
-    @include mixins.device-style('mobile')
-        background-size: 140%

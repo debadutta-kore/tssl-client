@@ -1,19 +1,19 @@
 @use './_variables' as variables
 
 @mixin device-style($device) 
-  @if $device == 'desktop' 
+  @if $device == 'lg' 
     // Styles for desktop
-    @media screen and (max-width: variables.$max-desktop)  and (min-width: variables.$min-desktop)
+    @media screen and (min-width: 1024px)
       @content
 
-  @else if $device == 'tablet'
+  @else if $device == 'md'
     // Styles for tablet
-    @media screen and (min-width: variables.$min-tablet) and (max-width: variables.$max-tablet)
+    @media screen and (min-width: 768px)
       @content
 
-  @else if $device == 'mobile'
+  @else if $device == 'sm'
     // Styles for mobile
-    @media screen and (max-width: variables.$max-mobile)
+    @media screen and (min-width: 640px)
       @content
 
 @mixin button()

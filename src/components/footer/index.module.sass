@@ -12,23 +12,19 @@
     width: 100%
     img
         margin-block: auto
-        width: 8%
-        height: 8%
-        @include mixins.device-style('mobile')
-            width: 30%
-            height: 30%
-        @include mixins.device-style('tablet')
+        width: 30%
+        height: 30%
+        @include mixins.device-style('sm')
             width: 20%
             height: 20%
+        @include mixins.device-style('md')
+            width: 10%
+            height: 10%
     & > span
         font-family: Inter
-        font-size: 15px
+        font-size: 20px
         font-weight: 400
         line-height: 32px
         letter-spacing: 0em
         color: #101828
         margin-block: auto
-        @include mixins.device-style('mobile')
-            font-size: 18px
-        @include mixins.device-style('tablet')
-            font-size: 20px

@@ -41,7 +41,7 @@
             margin-bottom: 10px
 .usecases-grid-container
     display: grid
-    grid-template-columns: repeat(auto-fit, minmax(32%, 1fr))
+    grid-template-columns: repeat(auto-fit, minmax(90%, 1fr))
     grid-auto-rows: max-content
     gap: 20px
     width: 100%
@@ -52,8 +52,9 @@
     bottom: 4rem
     padding: 1rem
     overflow-y: scroll
-    @include mixins.device-style('mobile')
-        grid-template-columns: repeat(auto-fit, minmax(90%, 1fr))
-    @include mixins.device-style('tablet')
-        grid-template-columns: repeat(auto-fit, minmax(48%, 1fr))
-    
+    @include mixins.device-style($device: 'sm')
+        grid-template-columns: repeat(auto-fit, minmax(45%, 1fr))
+    @include mixins.device-style($device: 'md')
+        grid-template-columns: repeat(auto-fit, minmax(40%, 1fr))
+    @include mixins.device-style($device: 'lg')
+        grid-template-columns: repeat(auto-fit, minmax(30%, 1fr))

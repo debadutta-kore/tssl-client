@@ -6,7 +6,7 @@
     align-items: center
     justify-content: center
     .emptyUseCase
-        width: 40%
+        width: 90%
         margin: auto
         &__placeholder
             display: flex
@@ -24,10 +24,10 @@
                 font-weight: 400
                 text-align: center
                 color: #475467
-        @include mixins.device-style('mobile')
-            width: 90%
-        @include mixins.device-style('tablet')
+        @include mixins.device-style('sm')
             width: 60%
+        @include mixins.device-style('lg')
+            width: 45%
 .usecase-setting-list
     display: flex
     flex-direction: column

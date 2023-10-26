@@ -9,19 +9,15 @@
     z-index: 10
     overflow-y: scroll
     .modal-body
-        width: 40%
+        width: 90%
         height: 100%
-        margin-top: 5%
+        display: flex
+        align-items: center
+        justify-content: center
         margin-inline: auto
-        @include mixins.device-style('mobile')
-            width: 90%
-            display: flex
-            align-items: center
-            justify-content: center
-            margin: auto
-        @include mixins.device-style('tablet')
-            width: 70%
-            display: flex
-            align-items: center
-            justify-content: center
-            margin: auto
+        @include mixins.device-style($device: 'sm')
+            width: 60%
+        @include mixins.device-style($device: 'sm')
+            width: 50%
+        @include mixins.device-style($device: 'lg')
+            width: 40%

@@ -20,7 +20,7 @@ function AccessControls() {
     }))
       .then(unwrapResult)
       .then(() => {
-        const status = checked ? 'blocked' : 'unblocked';
+        const status = checked ? 'unblocked' : 'blocked';
         toast(`User is ${status} successfully`, { type: 'success' });
       }).catch(() => {
         toast('Something is went wrong', { type: 'error' })

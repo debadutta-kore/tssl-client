@@ -47,7 +47,6 @@ export const updateAccess = createAsyncThunk('updateAccess', async (arg, thunkAp
 },{
     condition(arg,{getState}){
         const {control} = getState();
-        console.log(arg);
         if(arg && typeof arg.enable !=='undefined' && !control.isLoading){
             return true;
         } else {

@@ -2,7 +2,7 @@ import Card from "..";
 import style from "./index.module.sass";
 import deleteIcon from "../../../assets/icons/delete.svg";
 import Switch from "../../switch";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import usecaseDb from "../../../utilities/static-usecases.json";
 import ConfirmDeleteUsecase from "../../modal/confirmations/ConfirmdeleteUsecase";
 import { useDispatch } from "react-redux";
@@ -10,28 +10,29 @@ import { updateUsecase } from "../../../app/features/usecaseSlice";
 import { toast } from "react-toastify";
 import { unwrapResult } from "@reduxjs/toolkit";
 function UsecaseSetting(props) {
-    const ref = useRef();
     const dispatch = useDispatch();
     const [isDelete, setIsDelete] = useState(false);
 
     const info = usecaseDb.find((usecase) => usecase.id === props.usecaseId);
-    const onChangeStatus = () => {
-        const status = ref.current.checked ? "enabled" : "disabled";
+    const onChangeStatus = (event) => {
+        const status = event.target.checked ? "enabled" : "disabled";
         dispatch(
             updateUsecase({
                 id: info.id,
-                enable: ref.current.checked,
+                enable: event.target.checked,
             })
         )
             .then(unwrapResult)
             .then(() => {
-                if (ref.current.checked) {
+                console.log('successful');
+                if (event.target.checked) {
                     toast("Use Case enabled successfully!", { type: "success" });
                 } else {
                     toast(`Use Case disabled successfully!`, { type: "warning" });
                 }
             })
-            .catch(() => {
+            .catch((err) => {
+                console.log(err);
                 toast(`Unable to ${status} ${info.name} usecase`, { type: "error" });
             });
     };
@@ -52,7 +53,6 @@ function UsecaseSetting(props) {
                 <div>
                     <Switch
                         onChange={onChangeStatus}
-                        ref={ref}
                         checked={props.enable === 1 ? true : false}
                     />
                     <button onClick={() => setIsDelete(!isDelete)}>

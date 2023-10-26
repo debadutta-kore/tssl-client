@@ -14,9 +14,9 @@ function ConfirmLogout(props) {
     dispatch(logout())
     .then(unwrapResult)
     .then(()=>{
-      toast("You're logged out! Logout was successful",{type:'success'});
+      toast("Logout was successful",{type:'success'});
     }).catch(()=>{
-      toast("We couldn't log you out due to an error. Please try again later",{type:'error'});
+      toast("Failed to Logout",{type:'error'});
     }).finally(()=>{
       props.onClose();
     })

@@ -39,7 +39,25 @@
             border-radius: 50%
             background: #EAECF0
             margin-bottom: 10px
-.usecases-grid-container
+
+.usecases-grid-container-sm
+    position: fixed
+    right: 0
+    left: 0
+    top: 4rem
+    bottom: 4rem
+    padding: 1rem
+    display: grid
+    gap: 20px
+    grid-template-columns: repeat(auto-fit, 100%)
+    height: 250px
+    @include mixins.device-style($device: 'sm')
+        grid-template-columns: repeat(auto-fit, 48%)
+
+    @include mixins.device-style($device: 'lg')
+        grid-template-columns: repeat(auto-fit, 30%)
+
+.usecases-grid-container-lg
     display: grid
     grid-template-columns: repeat(auto-fit, minmax(90%, 1fr))
     grid-auto-rows: max-content

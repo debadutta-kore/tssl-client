@@ -44,7 +44,7 @@ function Home() {
     } else {
       placeHolder = <div className={style["container"]}>
         <div className={style["placeholder"]}>
-          <img src={comingSoon} alt="coming-soon" width={100} height={100} className={style['coming-soon-img']}/>
+          <img src={comingSoon} alt="coming-soon" width={100} height={100} className={style['coming-soon-img']} />
           <h3>Coming Soon!</h3>
         </div>
       </div>
@@ -84,7 +84,8 @@ function Home() {
           </div>
         </nav>
       </Header>
-      {filteredUsecase.length === 0 ? placeHolder : <ul className={style['usecases-grid-container']}>
+      {filteredUsecase.length === 0 ? placeHolder : 
+      <ul className={filteredUsecase.length > 2 ? style['usecases-grid-container-lg'] : style['usecases-grid-container-sm']}>
         {filteredUsecase.map((usecase) => (<li key={usecase.id} className={style['usecase-item']}><UseCaseCard {...usecase} /></li>))}
       </ul>}
     </>

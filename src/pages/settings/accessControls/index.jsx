@@ -14,12 +14,13 @@ function AccessControls() {
     dispatch(fetchControl());
   }, [dispatch]);
   const onChangeAccessHandler = (event) => {
+    const checked = event.target.checked;
     dispatch(updateAccess({
-      enable: event.target.checked ? 1 : 0
+      enable: checked ? 1 : 0
     }))
       .then(unwrapResult)
       .then(() => {
-        const status = event.target.checked ? 'blocked' : 'unblocked';
+        const status = checked ? 'blocked' : 'unblocked';
         toast(`User is ${status} successfully`, { type: 'success' });
       }).catch(() => {
         toast('Something is went wrong', { type: 'error' })

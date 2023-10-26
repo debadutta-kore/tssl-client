@@ -15,16 +15,17 @@ function UsecaseSetting(props) {
 
     const info = usecaseDb.find((usecase) => usecase.id === props.usecaseId);
     const onChangeStatus = (event) => {
-        const status = event.target.checked ? "enabled" : "disabled";
+        const checked = event.target.checked;
+        const status = checked ? "enabled" : "disabled";
         dispatch(
             updateUsecase({
                 id: info.id,
-                enable: event.target.checked,
+                enable: checked
             })
         )
             .then(unwrapResult)
             .then(() => {
-                if (event.target.checked) {
+                if (checked) {
                     toast("Use Case enabled successfully!", { type: "success" });
                 } else {
                     toast(`Use Case disabled successfully!`, { type: "warning" });

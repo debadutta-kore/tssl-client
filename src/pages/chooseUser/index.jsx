@@ -25,10 +25,12 @@ function ChooseUser() {
     if (userId) {
       dispatch(updateSession(userId))
         .then(() => {
+          //navigate to home
           navigate("/home");
-          action.setSubmitting(false);
         })
         .catch(() => {
+          //notify user
+        }).finally(()=>{
           action.setSubmitting(false);
         });
     } else {

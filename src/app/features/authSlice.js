@@ -118,17 +118,17 @@ const authSlice = createSlice({
         });
 
         builder.addCase(loginWithSession.fulfilled, (state, action) => {
-            state.role = action.payload.data.role;
+            state.role = action.payload.role;
             state.isLoading = false;
             state.isLogin = true;
-            if(action.payload.data.role === 'admin') {
-                state.name = action.payload.data.name;
+            if(action.payload.role === 'admin') {
+                state.name = action.payload.isChoosedUser;
             }
         })
 
-        builder.addCase(updateSession.fulfilled, (state,action) => {
+        builder.addCase(updateSession.fulfilled, (state) => {
             state.isLoading = false;
-            state.name = action.payload.data.name;
+            state.choosedUser = true;
         })
 
         builder.addMatcher(isAnyOf(login.rejected, logout.rejected, loginWithSession.rejected, updateSession.rejected), (state) => {

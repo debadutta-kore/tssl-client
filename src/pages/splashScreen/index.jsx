@@ -14,16 +14,17 @@ const SplashScreen = () => {
     dispatch(loginWithSession())
     .then(unwrapResult)
     .then((data)=>{
-      if(data.data.role === 'user') {
+      if(data.role === 'user') {
         navigate('/home');
       } else {
-        if(data.data.name) {
+        if(data.isChoosedUser) {
           navigate('/home');
         } else {
           navigate('/choose');
         }
       }
-    }).catch(()=>{
+    }).catch((err)=>{
+      console.log(err);
       navigate("/auth/login", { state: { loginFailed: true } });
     })
   }, [navigate, dispatch]);

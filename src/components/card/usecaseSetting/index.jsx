@@ -24,15 +24,13 @@ function UsecaseSetting(props) {
         )
             .then(unwrapResult)
             .then(() => {
-                console.log('successful');
                 if (event.target.checked) {
                     toast("Use Case enabled successfully!", { type: "success" });
                 } else {
                     toast(`Use Case disabled successfully!`, { type: "warning" });
                 }
             })
-            .catch((err) => {
-                console.log(err);
+            .catch(() => {
                 toast(`Unable to ${status} ${info.name} usecase`, { type: "error" });
             });
     };

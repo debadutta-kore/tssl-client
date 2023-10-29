@@ -13,7 +13,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 function Login() {
-  const isLogin = useSelector((state) => (state.auth.isLogin));
+  const {isLogin, choosedUser} = useSelector((state) => ({isLogin: state.auth.isLogin, choosedUser: state.auth.choosedUser}));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -51,7 +51,7 @@ function Login() {
   };
 
   if (isLogin) {
-    return <Navigate to={location.state?.from.pathname || '/home'} replace={true} />
+    return <Navigate to={location?.state?.from?.pathname || choosedUser ? '/choose' : '/home'} replace={true} />
   } else {
     if (!location.state?.isLoginFailed) {
       return <Navigate to="/auth/check" replace={true} />;

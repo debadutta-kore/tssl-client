@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import request from "../../utilities/request";
+import { resetControl } from "./controlSlice";
+import { resetUsecase } from "./usecaseSlice";
+import { resetUsers } from "./usersSlice";
 
 export const login = createAsyncThunk('login', async (arg, thunkApi) => {
     try {
@@ -23,6 +26,9 @@ export const logout = createAsyncThunk('logout', async (arg, thunkApi) => {
             method: 'DELETE'
         });
         if (res.ok) {
+            thunkApi.dispatch(resetControl());
+            thunkApi.dispatch(resetUsecase());
+            thunkApi.dispatch(resetUsers());
             return thunkApi.fulfillWithValue()
         } else {
             return thunkApi.rejectWithValue('unable to logout');
@@ -86,7 +92,7 @@ export const updateSession = createAsyncThunk('updateSession', async (userId, th
 }, {
     condition(arg, { getState }) {
         const { auth } = getState();
-        if (arg && !auth.isLoading) {
+        if (arg && !auth.isLoading && !auth.choosedUser) {
             return true;
         } else {
             return false;
@@ -104,6 +110,11 @@ const initialState = {
 const authSlice = createSlice({
     name: 'auth',
     initialState,
+    reducers:{
+        resetAuth(){
+            return initialState;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(login.fulfilled, (state, action) => {
             state.role = action.payload.role;
@@ -111,10 +122,8 @@ const authSlice = createSlice({
             state.isLoading = false;
         })
 
-        builder.addCase(logout.fulfilled, (state) => {
-            state.role = '';
-            state.isLogin = false;
-            state.isLoading = false
+        builder.addCase(logout.fulfilled, () => {
+            return initialState;
         });
 
         builder.addCase(loginWithSession.fulfilled, (state, action) => {
@@ -122,7 +131,7 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.isLogin = true;
             if(action.payload.role === 'admin') {
-                state.name = action.payload.isChoosedUser;
+                state.choosedUser = action.payload.isChoosedUser;
             }
         })
 
@@ -140,4 +149,6 @@ const authSlice = createSlice({
         })
     }
 });
+
+export const {resetAuth} = authSlice.actions;
 export default authSlice.reducer;

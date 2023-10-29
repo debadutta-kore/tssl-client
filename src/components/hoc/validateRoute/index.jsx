@@ -1,8 +1,10 @@
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-function ValidateRouteWithRole(props){
-    const role = useSelector((state)=>state.auth.role);
-    const roles = props.role || ['admin','user'];
-    return roles.includes(role) ? <props.Component/> : <h1>404 error path not found</h1>
+function withRoleValidation(WrappedComponent, roles = ['admin', 'user']) {
+    return function ValidRoute(props) {
+        const role = useSelector((state) => state.auth.role);
+        return roles.includes(role) ? <WrappedComponent {...props} /> : <Navigate to="/home" />
+    };
 }
-export default ValidateRouteWithRole;
+export default withRoleValidation;

@@ -13,6 +13,10 @@
 
     .close-btn
         @include mixins.button()
+        img
+            transition: transform 0.2s linear
+            &:hover
+                transform: rotate(180deg)
 .addnewuser-form
     width: 100%
     display: flex

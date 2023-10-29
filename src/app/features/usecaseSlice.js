@@ -132,6 +132,11 @@ const initialState = {
 const usecaseSlice = createSlice({
   name: "usecases",
   initialState,
+  reducers:{
+    resetUsecase(){
+      return initialState;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(addUsecase.fulfilled, (state, action) => {
       state.usecases.push(action.payload);
@@ -185,5 +190,7 @@ const usecaseSlice = createSlice({
     );
   },
 });
+
+export const {resetUsecase} = usecaseSlice.actions;
 
 export default usecaseSlice.reducer;

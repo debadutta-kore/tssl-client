@@ -5,7 +5,7 @@ import illustration from "../../../assets/Illustration.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchAllUsecases } from "../../../app/features/usecaseSlice";
-import { useOutletContext } from "react-router";
+import { useOutletContext } from "react-router-dom";
 import UsecaseSetting from "../../../components/card/usecaseSetting";
 function UseCaseSettings() {
   const usecases = useSelector((state) => state.usecases.usecases);

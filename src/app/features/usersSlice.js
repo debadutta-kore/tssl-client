@@ -109,6 +109,11 @@ const initialState = {
 const userSlice = createSlice({
   name: "users",
   initialState,
+  reducers:{
+    resetUsers(){
+      return initialState;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -139,5 +144,7 @@ const userSlice = createSlice({
     );
   },
 });
+
+export const {resetUsers} = userSlice.actions;
 
 export default userSlice.reducer;

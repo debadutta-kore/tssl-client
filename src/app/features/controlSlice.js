@@ -62,6 +62,11 @@ const initialState = {
 const control = createSlice({
     name: 'control',
     initialState,
+    reducers:{
+        resetControl(){
+            return initialState;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchControl.fulfilled, (state, action) => {
             state.id = action.payload.id;
@@ -82,4 +87,5 @@ const control = createSlice({
     }
 });
 
+export const {resetControl} = control.actions;
 export default control.reducer;

@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../header";
 import arrow from "../../../assets/icons/Arrow Back.svg";
 import style from "./index.module.sass";
@@ -9,8 +9,9 @@ import addIcon from '../../../assets/icons/Add.svg'
 import AddUseCase from "../../modal/addUseCase";
 import { useState } from "react";
 import ConfirmLogout from "../../modal/confirmations/Confirmlogout";
+import withRoleValidation from "../../hoc/validateRoute";
 
-function SettingsLayout() {
+const SettingsLayout = withRoleValidation(function SettingsLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const usecases = useSelector((state) => state.usecases.usecases);
@@ -31,7 +32,7 @@ function SettingsLayout() {
   return (
     <>
       {addUsecase && <AddUseCase onClose={() => setAddUsecase(!addUsecase)} />}
-      {islogout && <ConfirmLogout onClose={()=>setIsLogout(!islogout)}/>}
+      {islogout && <ConfirmLogout onClose={() => setIsLogout(!islogout)} />}
       <Header>
         <nav className={style["nav-bar"]}>
           <button onClick={() => navigate(-1)}>
@@ -43,15 +44,15 @@ function SettingsLayout() {
           </button>}
         </nav>
       </Header>
-      <div className={style['settings-container']} style={{bottom: pathParts[pathParts.length - 1]==='settings'?'9rem':'4rem'}}>
-        <Outlet context={{setAddUsecase}}/>
-      </div>
-      {pathParts[pathParts.length - 1]==='settings' && <Button className={style["logout"]} onClick={()=>setIsLogout(!islogout)}>
+      <main className={style['settings-container']} style={{ bottom: pathParts[pathParts.length - 1] === 'settings' ? '9rem' : '4rem' }}>
+        <Outlet context={{ setAddUsecase }} />
+      </main>
+      {pathParts[pathParts.length - 1] === 'settings' && <Button className={style["logout"]} onClick={() => setIsLogout(!islogout)}>
         <img src={logout} alt="logout" width={30} height={30} />
         <span>Logout</span>
       </Button>}
     </>
   );
-}
+}, ['admin']);
 
 export default SettingsLayout;

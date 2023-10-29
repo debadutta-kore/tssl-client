@@ -1,8 +1,10 @@
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectRoute = (props) =>{
   const isLogin = useSelector(state=>state.auth.isLogin);
-  return isLogin ? props.children : <Navigate to="/auth/check" replace={true}/>
+  const location = useLocation();
+  return isLogin ? props.children : <Navigate to="/auth/check" replace={true} state={{from: location}}/>
 }
+
 export default ProtectRoute

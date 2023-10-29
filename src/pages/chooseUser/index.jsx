@@ -8,10 +8,13 @@ import AddNewUser from "../../components/modal/addNewUser";
 import UserOption from "../../components/userOption";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../../app/features/usersSlice";
-import { useNavigate } from "react-router";
+import { useNavigate, Navigate } from "react-router-dom";
 import { updateSession } from "../../app/features/authSlice";
+import { toast } from "react-toastify";
+
 function ChooseUser() {
   const [addNewUser, setAddNewUser] = useState(false);
+  const isChoosedUser = useSelector((state) => state.auth.choosedUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const users = useSelector((state) => state.users.users);
@@ -30,15 +33,17 @@ function ChooseUser() {
         })
         .catch(() => {
           //notify user
-        }).finally(()=>{
+          toast('Something went wrong', { type: 'error' });
+        }).finally(() => {
           action.setSubmitting(false);
         });
     } else {
-      action.setFieldError('user','error');
+      action.setFieldError('user', 'error');
     }
   };
+
   return (
-    <Card>
+    !isChoosedUser ? <Card>
       {addNewUser && <AddNewUser onClose={() => setAddNewUser(!addNewUser)} />}
       <div className={style["choose-user-header"]}>
         <h2>Choose User</h2>
@@ -70,7 +75,8 @@ function ChooseUser() {
           </Form>
         )}
       </Formik>
-    </Card>
+    </Card> : <Navigate to="/home" replace={true} />
   );
 }
+
 export default ChooseUser;

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import Footer from "../footer";
 import logo from "../../assets/kore.ai.svg";
 import { useEffect } from "react";

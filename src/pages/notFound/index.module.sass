@@ -1,0 +1,38 @@
+.not-found-container 
+    display: flex
+    gap: 15px
+    width: min-content
+    flex-direction: column
+    height: 100%
+    margin-inline: auto
+    text-align: center
+    justify-content: center
+    .not-found-img
+        margin-inline: auto
+        width: 300px
+        height: 200px
+    .title
+        color: #000000
+    .sub-title
+        color: #667085
+        line-height: 20px
+        font-weight: 400
+.btn-container
+    display: flex
+    justify-content: center
+    gap: 15px
+    button:first-child
+        color:#344054
+        background: white
+        border: 1px solid #D0D5DD
+        box-shadow: 0px 1px 2px 0px #1018280D
+        img
+            vertical-align: middle
+            margin-right: 12px
+    button:last-child
+        &:disabled
+            border: 1px solid #EAECF0
+            background: #EAECF0
+            color: #D0D5DD
+            border: 1px solid #EAECF0
+            box-shadow: 0px 1px 2px 0px #1018280D

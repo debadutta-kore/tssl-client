@@ -11,8 +11,9 @@ import { fetchAllUser } from "../../app/features/usersSlice";
 import { useNavigate, Navigate } from "react-router-dom";
 import { updateSession } from "../../app/features/authSlice";
 import { toast } from "react-toastify";
+import withRoleValidation from "../../components/hoc/validateRoute";
 
-function ChooseUser() {
+const ChooseUser = withRoleValidation(function ChooseUser() {
   const [addNewUser, setAddNewUser] = useState(false);
   const isChoosedUser = useSelector((state) => state.auth.choosedUser);
   const dispatch = useDispatch();
@@ -77,6 +78,6 @@ function ChooseUser() {
       </Formik>
     </Card> : <Navigate to="/home" replace={true} />
   );
-}
+}, ['admin']);
 
 export default ChooseUser;

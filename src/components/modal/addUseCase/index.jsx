@@ -19,24 +19,20 @@ function AddUseCase(props) {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const notAddedUsecases = usecasesDb.filter(({ id }) => {
+    let isPresent = false;
+    for (const { usecaseId } of usecases) {
+      if (usecaseId === id) {
+        isPresent = true;
+      } 
+    }
+    return !isPresent;
+  });
+
   const onSelectUsecase = (usecase) => {
     setSelectedUseCase(usecase);
     setOpenDropDown(false);
   }
-
-  const notAddedUsecases = usecasesDb.filter(({ id }) => {
-    if (usecases.length > 0) {
-      for (const { usecaseId } of usecases) {
-        if (usecaseId === id) {
-          return false;
-        } else {
-          return true;
-        }
-      }
-    } else {
-      return true;
-    }
-  });
 
   const onSaveUsecase = () => {
     setIsLoading(true);
@@ -53,7 +49,6 @@ function AddUseCase(props) {
         props.onClose();
       });
   }
-
 
   return (
     <Modal>
@@ -124,7 +119,7 @@ function AddUseCase(props) {
                         style["dropdown-options__selection__info__status"]
                       }
                       style={{
-                        visibility: usecase.isComingSoon ? "visible" : "hidden",
+                        display: usecase.isComingSoon ? "initial" : "none",
                       }}
                     >
                       (Coming Soon)

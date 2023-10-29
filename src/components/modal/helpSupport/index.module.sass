@@ -36,9 +36,13 @@
         &__container
             display: inline-flex
             gap: 20px
-            &__radio-field
-                display: flex
-                gap: 12px
+            .radio-label
+                input
+                    margin-right: 8px
+                    vertical-align: middle
+                    margin-bottom: 2px
+                span
+                    margin-block: auto
         &__label
             @extend label
             
@@ -96,7 +100,6 @@
                 border: 1px solid #EAECF0
                 box-shadow: 0px 1px 2px 0px #1018280D
     .files-list
-        display: flex
-        flex-direction: row
-        flex-wrap: wrap
+        display: grid
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr))
         gap: 10px

@@ -9,10 +9,10 @@ function UploadedImage(props){
             <img src={imgPlaceholder} alt='img-placeholder' width={20} height={20}/>
             <span>{imgName}</span>
         </div>
-        <button>
+        <button onClick={props.removeImg} type='button'>
             <img src={deleteImage} alt={'delete-img'} width={30} height={30}/>
         </button>
-        <img src={props.url} alt={props.name} className={style['original-img']} width={90} height={90}/>
+        <img src={props.url} alt={props.name} className={style['original-img']} width="100%" height={90}/>
     </li>
 }
 

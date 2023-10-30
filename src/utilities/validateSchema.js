@@ -20,14 +20,14 @@ export const fullNameSchema = Yup.string().required('Full name is required')
 .max(50, 'Full name must be at most 50 characters')
 
 export const emailSubjectSchema = Yup.string()
-  .required('Email subject is required')
+  .required('Please enter the mandatory details.')
   .min(10, 'Email subject must be at least 10 character')
   .max(50, 'Email subject can be at most 50 characters');
 
 export const emailBodySchema =  Yup
   .string()
   .trim()
-  .required('Email body is required')
+  .required('Please enter the mandatory details.')
   .min(10, 'Email body must be at least 10 characters long')
   .max(1000, 'Email body cannot be longer than 1000 characters')
 

@@ -6,7 +6,12 @@ import { Field, Form, Formik } from "formik";
 import fileUploadIcon from "../../../assets/icons/upload-cloud.svg";
 import Button from "../../button";
 import UploadedImage from "./uploadedImage";
-import InputField from "../../InputField";
+import * as Yup from "yup";
+import {
+  emailBodySchema,
+  emailFileValidation,
+  emailSubjectSchema,
+} from "../../../utilities/validateSchema";
 function HelpSupport(props) {
   return (
     <Modal>
@@ -25,6 +30,11 @@ function HelpSupport(props) {
               description: "",
               screenshots: [],
             }}
+            validationSchema={Yup.object().shape({
+              subject: emailSubjectSchema,
+              description: emailBodySchema,
+              screenshots: Yup.array().of(emailFileValidation),
+            })}
           >
             {(formik) => (
               <Form className={style["issue-submit-form"]}>
@@ -52,33 +62,59 @@ function HelpSupport(props) {
                     </label>
                   </div>
                 </div>
-                <InputField
-                  type="text"
-                  name="subject"
-                  label="Subject"
-                  placeholder="Enter subject"
-                  required={true}
-                />
-                <Field name="description">
-                  {({ field }) => (
-                    <div className={style["form-field"]}>
-                      <label
-                        htmlFor="description"
-                        className={style["required"]}
-                      >
-                        Description
-                      </label>
-                      <textarea
-                        placeholder="Enter a description..."
-                        id="description"
-                        rows="6"
-                        name="description"
-                        required={true}
-                        {...field}
-                      ></textarea>
-                    </div>
-                  )}
-                </Field>
+                <div className={style["form-field"]}>
+                  <label htmlFor="subject" className={style["required"]}>
+                    Subject
+                  </label>
+                  <Field name="subject">
+                    {({ field, meta }) => (
+                      <>
+                        <input
+                          placeholder="Enter Subject"
+                          id="subject"
+                          name="subject"
+                          className={
+                            meta.touched && meta.error
+                              ? style["error-input"]
+                              : ""
+                          }
+                          required={true}
+                          {...field}
+                        />
+                        {meta.touched && meta.error && (
+                          <span className={style["error"]}>{meta.error}</span>
+                        )}
+                      </>
+                    )}
+                  </Field>
+                </div>
+                <div className={style["form-field"]}>
+                  <label htmlFor="description" className={style["required"]}>
+                    Description
+                  </label>
+                  <Field name="description">
+                    {({ field, meta }) => (
+                      <>
+                        <textarea
+                          placeholder="Enter a description..."
+                          id="description"
+                          rows="6"
+                          className={
+                            meta.touched && meta.error
+                              ? style["error-input"]
+                              : ""
+                          }
+                          name="description"
+                          required={true}
+                          {...field}
+                        ></textarea>
+                        {meta.touched && meta.error && (
+                          <span className={style["error"]}>{meta.error}</span>
+                        )}
+                      </>
+                    )}
+                  </Field>
+                </div>
                 <div className={style["form-field"]}>
                   <label
                     htmlFor="file-uploader"
@@ -100,29 +136,41 @@ function HelpSupport(props) {
                     multiple={true}
                     accept="image/jpg, image/jpeg, image/png"
                     id="file-uploader"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     name="screenshots"
                     onChange={(e) => {
                       console.log(e?.target?.files);
                       if (e?.target?.files && e.target.files.length > 0) {
-                        formik.setFieldValue("screenshots", [...formik.values.screenshots, ...e.target.files]);
+                        formik.setFieldValue("screenshots", [
+                          ...formik.values.screenshots,
+                          ...e.target.files,
+                        ]);
                       }
                     }}
                   />
                 </div>
-                <ul className={style["files-list"]}>
-                  {
-                    formik.values.screenshots.map((image,index) => (
-                      <UploadedImage
-                        url={URL.createObjectURL(image)}
-                        name={image.name}
-                        key={index}
-                        removeImg={()=>{
-                          formik.setFieldValue("screenshots", formik.values.screenshots.filter((_,ind)=> ind !== index));
-                        }}
-                      />
-                    ))
+                <ul
+                  className={
+                    formik.values.screenshots.length > 2
+                      ? style["files-list-lg"]
+                      : style["files-list-sm"]
                   }
+                >
+                  {formik.values.screenshots.map((image, index) => (
+                    <UploadedImage
+                      url={URL.createObjectURL(image)}
+                      name={image.name}
+                      key={index}
+                      removeImg={() => {
+                        formik.setFieldValue(
+                          "screenshots",
+                          formik.values.screenshots.filter(
+                            (_, ind) => ind !== index
+                          )
+                        );
+                      }}
+                    />
+                  ))}
                 </ul>
                 <div className={style["btn-container"]}>
                   <Button onClick={props.onClose}>Cancel</Button>

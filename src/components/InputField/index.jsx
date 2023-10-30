@@ -16,7 +16,8 @@ function InputField(props) {
   };
 
   const errorStyle = {
-    border: "1px solid #FDA29B",
+    borderColor: "#FDA29B",
+    outlineColor: '#FDA29B',
     boxShadow: "0px 1px 2px 0px #1018280D",
   };
 

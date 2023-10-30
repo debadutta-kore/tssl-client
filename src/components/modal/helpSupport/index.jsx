@@ -126,10 +126,10 @@ function HelpSupport(props) {
                       width={15}
                       height={15}
                     />
-                    <span>
+                    <span className={style['title']}>
                       <b>Click to upload</b> or drag and drop
                     </span>
-                    <span>PNG or JPG images</span>
+                    <span className={style['sub-title']}>PNG or JPG images</span>
                   </label>
                   <input
                     type="file"

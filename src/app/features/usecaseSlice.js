@@ -12,9 +12,8 @@ export const addUsecase = createAsyncThunk(
           usecaseId: arg.usecaseId,
         },
       });
-      if (res.ok) {
-        const data = await res.json();
-        return thunkApi.fulfillWithValue(data);
+      if (res.status === 200) {
+        return thunkApi.fulfillWithValue(res.data);
       } else {
         return thunkApi.rejectWithValue("Unable to add usecase");
       }
@@ -42,7 +41,7 @@ export const deleteUsecase = createAsyncThunk(
         url: `/usecase/delete/${arg.id}`,
         method: "DELETE",
       });
-      if (res.ok) {
+      if (res.status === 204) {
         return thunkApi.fulfillWithValue();
       } else {
         return thunkApi.rejectWithValue("Unable to delete this");
@@ -71,9 +70,8 @@ export const fetchAllUsecases = createAsyncThunk(
         url: "/usecase/all",
         method: "GET",
       });
-      if (res.ok) {
-        const data = await res.json();
-        return thunkApi.fulfillWithValue(data);
+      if (res.status === 200) {
+        return thunkApi.fulfillWithValue(res.data);
       } else {
         return thunkApi.rejectWithValue("unable to fetch data");
       }
@@ -103,8 +101,7 @@ export const updateUsecase = createAsyncThunk(
         data: { enable: arg.enable ? 1 : 0, usecaseId: arg.id },
       });
       if (res.ok) {
-        const data = await res.json();
-        return thunkApi.fulfillWithValue(data);
+        return thunkApi.fulfillWithValue(res.data);
       } else {
         return thunkApi.rejectWithValue("Unable to process your request");
       }

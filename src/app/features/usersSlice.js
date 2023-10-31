@@ -14,9 +14,8 @@ export const createUser = createAsyncThunk(
           name: arg.name
         },
       });
-      if (res.ok) {
-        const data = await res.json();
-        return thunkApi.fulfillWithValue(data);
+      if (res.status === 200) {
+        return thunkApi.fulfillWithValue(res.data);
       } else {
         return thunkApi.rejectWithValue("not able to fetch all user");
       }
@@ -50,7 +49,7 @@ export const deleteUser = createAsyncThunk(
         url: `/account/user/${arg.userId}`,
         method: "DELETE",
       });
-      if (res.ok) {
+      if (res.status === 204) {
         return thunkApi.fulfillWithValue();
       } else {
         return thunkApi.rejectWithValue("unable to delete user");
@@ -84,9 +83,8 @@ export const fetchAllUser = createAsyncThunk(
         url: "/account/user",
         method: "GET",
       });
-      if (res.ok) {
-        const data = await res.json();
-        return thunkApi.fulfillWithValue(data);
+      if (res.status === 200) {
+        return thunkApi.fulfillWithValue(res.data);
       } else {
         return thunkApi.rejectWithValue("not able to fetch all user");
       }

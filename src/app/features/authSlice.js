@@ -7,12 +7,10 @@ import { resetUsers } from "./usersSlice";
 export const login = createAsyncThunk('login', async (arg, thunkApi) => {
     try {
         const res = await request(arg);
-        if (res.ok) {
-            const data = await res.json();
-            return thunkApi.fulfillWithValue(data);
+        if (res.status === 200) {
+            return thunkApi.fulfillWithValue(res.data);
         } else if(res.status === 400) { 
-            const data = await res.json();
-            return thunkApi.rejectWithValue(data);
+            return thunkApi.rejectWithValue(res.data);
         }
     } catch (err) {
         return thunkApi.rejectWithValue('Internal Server Error');
@@ -25,7 +23,7 @@ export const logout = createAsyncThunk('logout', async (arg, thunkApi) => {
             url: `/auth/logout`,
             method: 'DELETE'
         });
-        if (res.ok) {
+        if (res.status === 204) {
             thunkApi.dispatch(resetControl());
             thunkApi.dispatch(resetUsecase());
             thunkApi.dispatch(resetUsers());
@@ -53,9 +51,8 @@ export const loginWithSession = createAsyncThunk('loginWithSession', async (arg,
             url: '/auth/session',
             method: 'GET'
         });
-        if (res.ok) {
-            const data = await res.json();
-            return thunkApi.fulfillWithValue(data);
+        if (res.status === 200) {
+            return thunkApi.fulfillWithValue(res.data);
         } else {
             return thunkApi.rejectWithValue('Unauthorize user');
         }
@@ -80,9 +77,8 @@ export const updateSession = createAsyncThunk('updateSession', async (userId, th
             method: 'PUT',
             data: { userId }
         });
-        if (res.ok) {
-            const data = await res.json();
-            return thunkApi.fulfillWithValue(data);
+        if (res.status === 200) {
+            return thunkApi.fulfillWithValue(res.data);
         } else {
             return thunkApi.rejectWithValue('something went wrong');
         }

@@ -1,21 +1,18 @@
-const serverUrl = import.meta.env.VITE_SERVER_URL;
+import axios from "axios";
+
+const axiosRequest = axios.create({
+  baseURL: import.meta.env.VITE_SERVER_URL,
+  headers:{
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  withCredentials: true
+});
 /**
  * 
- * @param {string} url 
- * @param {'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH'} method 
- * @param {Object} data
- * @returns 
+ * @param {import("axios").AxiosRequestConfig} payload 
  */
-function request({url, method, data }) {
-    return fetch(serverUrl+url, {
-        method,
-        headers:{
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: data && JSON.stringify(data),
-        credentials: 'include',
-        mode: 'cors'
-      })
+function request(payload) {
+  return axiosRequest(payload)
 }
 export default request;

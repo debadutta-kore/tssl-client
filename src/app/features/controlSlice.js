@@ -7,9 +7,8 @@ export const fetchControl = createAsyncThunk('fetchControls', async (arg, thunkA
             url: '/account/user/details',
             method: 'GET'
         });
-        if (res.ok) {
-            const data = await res.json();
-            return thunkApi.fulfillWithValue(data);
+        if (res.status === 200) {
+            return thunkApi.fulfillWithValue(res.data);
         } else {
             return thunkApi.rejectWithValue('Unable to fetch usecase');
         }
@@ -36,7 +35,7 @@ export const updateAccess = createAsyncThunk('updateAccess', async (arg, thunkAp
                 enable: arg.enable ? 1 : 0
             }
         });
-        if (res.ok) {
+        if (res.status === 200) {
             return thunkApi.fulfillWithValue();
         } else {
             return thunkApi.rejectWithValue('Unable to update the user access');

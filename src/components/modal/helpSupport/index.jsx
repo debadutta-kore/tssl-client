@@ -67,6 +67,7 @@ function HelpSupport(props) {
                 <div className={style["choose-user-header"]}>
                   <h2>Help & Support</h2>
                   <button
+                    disabled={formik.isSubmitting}
                     className={style["close-btn"]}
                     onClick={props.onClose}
                   >

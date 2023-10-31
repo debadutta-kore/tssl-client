@@ -6,13 +6,12 @@ const axiosRequest = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
+  validateStatus: (status)=> (status <= 404),
   withCredentials: true
 });
 /**
  * 
- * @param {import("axios").AxiosRequestConfig} payload 
+ * @param {import("axios").AxiosRequestConfig} config
  */
-function request(payload) {
-  return axiosRequest(payload)
-}
+const request = (config) => axiosRequest(config);
 export default request;

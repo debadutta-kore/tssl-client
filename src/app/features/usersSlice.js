@@ -14,10 +14,12 @@ export const createUser = createAsyncThunk(
           name: arg.name
         },
       });
-      if (res.status === 200) {
+      if (res.status === 201) {
         return thunkApi.fulfillWithValue(res.data);
+      } else if (res.status === 400 && res.data?.email) {
+        return thunkApi.rejectWithValue({email: res.data.email});
       } else {
-        return thunkApi.rejectWithValue("not able to fetch all user");
+        return thunkApi.rejectWithValue('not able to create user');
       }
     } catch (err) {
       return thunkApi.rejectWithValue('something went wrong')

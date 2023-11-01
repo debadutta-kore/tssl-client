@@ -46,7 +46,7 @@ function HelpSupport(props) {
   };
   return (
     <Modal>
-      <ModalBody style={{ marginBlock: "10rem" }}>
+      <ModalBody style={{marginBlock:'8%' }}>
         <Card>
           <Formik
             initialValues={{

@@ -18,10 +18,10 @@ import { toast } from "react-toastify";
 function HelpSupport(props) {
   const onSubmitForm = (value, action) => {
     const formData = new FormData();
-    formData.append('subject', value.subject);
-    formData.append('description',value.description);
-    formData.append('queryType', value.type);
-    value.attachments.forEach((attachment,index)=>{
+    formData.append("subject", value.subject);
+    formData.append("description", value.description);
+    formData.append("queryType", value.type);
+    value.attachments.forEach((attachment, index) => {
       formData.append(`file-${index}`, attachment);
     });
     request({
@@ -30,14 +30,14 @@ function HelpSupport(props) {
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
-        'Accept':'application/json'
-      }
+        Accept: "application/json",
+      },
     })
       .then(() => {
-        toast('Your response sent successfully!',{type:'success'});
+        toast("Your response sent successfully!", { type: "success" });
       })
       .catch(() => {
-        toast('Something Went Wrong', {type: 'error'});
+        toast("Something Went Wrong", { type: "error" });
       })
       .finally(() => {
         action.setSubmitting(false);
@@ -46,7 +46,7 @@ function HelpSupport(props) {
   };
   return (
     <Modal>
-      <ModalBody style={{marginBlock:'8%' }}>
+      <ModalBody style={{ marginBlock: "8%" }}>
         <Card>
           <Formik
             initialValues={{

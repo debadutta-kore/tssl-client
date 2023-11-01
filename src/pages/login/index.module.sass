@@ -1,5 +1,11 @@
+@use '../../sass/_mixins' as mixins
 .login
+    width: 90%
     gap: 15px
+    @media screen and (min-width: 500px) 
+        width: 470px
+    @include mixins.device-style($device: 'sm')
+        width: 500px
     .branding
         display: inline-flex
         align-items: center

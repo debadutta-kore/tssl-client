@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { unwrapResult } from "@reduxjs/toolkit";
 function AddNewUser(props) {
   const dispatch = useDispatch();
-  const onAddUser = (value, action) => {
+  const onAddUser = (value, actions) => {
     dispatch(createUser({
       email: value.email,
       name: value.fullName,
@@ -21,12 +21,17 @@ function AddNewUser(props) {
     }))
       .then(unwrapResult)
       .then(() => {
-        toast(`User ${value.fullName} Added Successfully`, { type: 'success' })
-      }).catch(() => {
-        toast(`Unable to add ${value.fullName} as a user`, { type: 'error' })
-      }).finally(() => {
-        action.setSubmitting(false)
+        toast(`User ${value.fullName} Added Successfully`, { type: 'success' });
         props.onClose();
+      }).catch((error) => {
+        if(error.email) {
+          actions.setFieldError('email', error.email);
+        } else {
+          toast(`Unable to add ${value.fullName} as a user`, { type: 'error' });
+          props.onClose();
+        }
+      }).finally(()=>{
+        actions.setSubmitting(false);
       })
   }
   return (

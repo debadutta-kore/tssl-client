@@ -12,7 +12,7 @@ export const addUsecase = createAsyncThunk(
           usecaseId: arg.usecaseId,
         },
       });
-      if (res.status === 200) {
+      if (res.status === 201) {
         return thunkApi.fulfillWithValue(res.data);
       } else {
         return thunkApi.rejectWithValue("Unable to add usecase");

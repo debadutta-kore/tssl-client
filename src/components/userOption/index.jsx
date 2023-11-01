@@ -7,6 +7,10 @@ import { Field } from "formik";
 function UserOption(props) {
   const elementId = useId();
   const [deleteUser, setDeleteUser] = useState(false);
+  const onDeleteHandler = () => {
+    props.onDelete();
+    setDeleteUser(!deleteUser);
+  };
   return (
     <li className={style["option"]}>
       <Field
@@ -29,7 +33,7 @@ function UserOption(props) {
       </label>
       <button
         className={style["delete-user"]}
-        onClick={() => setDeleteUser(!deleteUser)}
+        onClick={onDeleteHandler}
         type="button"
       >
         <img src={deleteIcon} alt="delete-icon" width={15} height={15} />

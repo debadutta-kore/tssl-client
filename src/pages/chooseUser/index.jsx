@@ -13,71 +13,88 @@ import { updateSession } from "../../app/features/authSlice";
 import { toast } from "react-toastify";
 import withRoleValidation from "../../components/hoc/validateRoute";
 
-const ChooseUser = withRoleValidation(function ChooseUser() {
-  const [addNewUser, setAddNewUser] = useState(false);
-  const isChoosedUser = useSelector((state) => state.auth.choosedUser);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const users = useSelector((state) => state.users.users);
+const ChooseUser = withRoleValidation(
+  function ChooseUser() {
+    const [addNewUser, setAddNewUser] = useState(false);
+    const isChoosedUser = useSelector((state) => state.auth.choosedUser);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const users = useSelector((state) => state.users.users);
 
-  useEffect(() => {
-    dispatch(fetchAllUser());
-  }, [dispatch]);
+    useEffect(() => {
+      dispatch(fetchAllUser());
+    }, [dispatch]);
 
-  const onSubmitHandler = (value, action) => {
-    const userId = value.user.trim();
-    if (userId) {
-      dispatch(updateSession(userId))
-        .then(() => {
-          //navigate to home
-          navigate("/home");
-        })
-        .catch(() => {
-          //notify user
-          toast('Something went wrong', { type: 'error' });
-        }).finally(() => {
-          action.setSubmitting(false);
-        });
-    } else {
-      action.setFieldError('user', 'error');
-    }
-  };
+    const onSubmitHandler = (value, action) => {
+      const userId = value.user.trim();
+      if (userId) {
+        dispatch(updateSession(userId))
+          .then(() => {
+            //navigate to home
+            navigate("/home");
+          })
+          .catch(() => {
+            //notify user
+            toast("Something went wrong", { type: "error" });
+          })
+          .finally(() => {
+            action.setSubmitting(false);
+          });
+      } else {
+        action.setFieldError("user", "error");
+      }
+    };
 
-  return (
-    !isChoosedUser ? <Card>
-      {addNewUser && <AddNewUser onClose={() => setAddNewUser(!addNewUser)} />}
-      <div className={style["choose-user-header"]}>
-        <h2>Choose User</h2>
-        <Button onClick={() => setAddNewUser(!addNewUser)}>
-          <img src={AddIcon} width={15} height={15} />
-          <span>Add User</span>
-        </Button>
-      </div>
-      <Formik initialValues={{ user: '' }} onSubmit={onSubmitHandler}>
-        {({ isSubmitting, values }) => (
-          <Form className={style["choose-user-form"]}>
-            {users.length > 0 ? (
-              <ul className={style["users-list"]}>
-                {users.map((user) => (
-                  <UserOption name={user.name} value={user.id} key={user.id} />
-                ))}
-              </ul>
-            ) : (
-              <div className={style["choose-user-placeholder"]}>
-                <h3>No Users Added Yet.</h3>
-                <span>
-                  Please add user by clicking on the “+ Add User” button.
-                </span>
-              </div>
-            )}
-            <Button type="submit" disabled={!values.user.trim()} isLoading={isSubmitting}>
-              Proceed
-            </Button>
-          </Form>
+    return !isChoosedUser ? (
+      <Card className={style["choose-user"]}>
+        {addNewUser && (
+          <AddNewUser onClose={() => setAddNewUser(!addNewUser)} />
         )}
-      </Formik>
-    </Card> : <Navigate to="/home" replace={true} />
-  );
-}, ['admin']);
+        <div className={style["choose-user-header"]}>
+          <h2>Choose User</h2>
+          <Button onClick={() => setAddNewUser(!addNewUser)}>
+            <img src={AddIcon} width={15} height={15} />
+            <span>Add User</span>
+          </Button>
+        </div>
+        <Formik initialValues={{ user: "" }} onSubmit={onSubmitHandler}>
+          {({ isSubmitting, values, resetForm }) => (
+            <Form className={style["choose-user-form"]}>
+              {users.length > 0 ? (
+                <ul className={style["users-list"]}>
+                  {users.map((user) => (
+                    <UserOption
+                      name={user.name}
+                      value={user.id}
+                      key={user.id}
+                      onDelete={()=>resetForm({user:''})}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <div className={style["choose-user-placeholder"]}>
+                  <h3>No Users Added Yet.</h3>
+                  <span>
+                    Please add user by clicking on the “+ Add User” button.
+                  </span>
+                </div>
+              )}
+              <Button
+                type="submit"
+                disabled={!values.user.trim()}
+                isLoading={isSubmitting}
+              >
+                Proceed
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </Card>
+    ) : (
+      <Navigate to="/home" replace={true} />
+    );
+  },
+  ["admin"]
+);
 
 export default ChooseUser;

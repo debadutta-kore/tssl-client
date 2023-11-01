@@ -1,14 +1,24 @@
 @use '../../../sass/_mixins.sass' as mixins
 .layout-container
     margin-inline: auto
-    height: 100%
-    width: 80%
+    width: 100%
     display: flex
     align-items: center
     justify-content: center
-    @include mixins.device-style('sm')
-        width: 60%
-    @include mixins.device-style('md')
-        width: 50%
-    @include mixins.device-style('lg')
-        width: 40%
+    position: fixed
+    right: 0
+    left: 0
+    top:0
+    bottom: 3.9rem
+    background: url(/doughnut.svg) no-repeat center/contain #EBB8B8
+    background-size: 130%
+    @media screen and (min-width: 436px)
+        background-size: 100%
+    @media screen and (min-width: 580px)
+        background-size: 90%
+    @include mixins.device-style($device: 'sm')
+        background-size: 80%
+    @include mixins.device-style($device: 'md')
+        background-size: 60%
+    @include mixins.device-style($device: 'lg')
+        background-size: 40%

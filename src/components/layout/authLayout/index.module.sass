@@ -11,14 +11,6 @@
     top:0
     bottom: 3.9rem
     background: url(/doughnut.svg) no-repeat center/contain #EBB8B8
-    background-size: 130%
-    @media screen and (min-width: 436px)
-        background-size: 100%
-    @media screen and (min-width: 580px)
-        background-size: 90%
+    background-size: 550px auto
     @include mixins.device-style($device: 'sm')
-        background-size: 80%
-    @include mixins.device-style($device: 'md')
-        background-size: 60%
-    @include mixins.device-style($device: 'lg')
-        background-size: 40%
+        background-size: 700px auto

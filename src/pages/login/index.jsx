@@ -89,7 +89,7 @@ function Login() {
               {/* <Link to="../reset" style={{ marginLeft: "auto" }}>
             Reset Password?
           </Link> */}
-              <Button type="sumbmit" isLoading={isSubmitting} disabled={!isValid}>Login</Button>
+              <Button type="sumbmit" isLoading={isSubmitting} disabled={!isValid} className={style['btn-submit']}>Login</Button>
             </Form>
           )}
         </Formik>

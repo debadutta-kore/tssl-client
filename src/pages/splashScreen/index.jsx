@@ -35,8 +35,7 @@ const SplashScreen = () => {
               state: { isLoginFailed: true },
               replace: true,
             });
-          } 
-          if(err.name !== "ConditionError") {
+          } else if(err.name !== "ConditionError") {
             toast(err.message, { type: "error" });
           }
         });

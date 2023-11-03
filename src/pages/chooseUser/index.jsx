@@ -13,6 +13,7 @@ import { updateSession } from "../../app/features/authSlice";
 import { toast } from "react-toastify";
 import withRoleValidation from "../../components/hoc/validateRoute";
 import LoadingSpinner from "../../components/loadingSpinner";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const ChooseUser = withRoleValidation(
   function ChooseUser() {
@@ -26,7 +27,12 @@ const ChooseUser = withRoleValidation(
     const users = useSelector((state) => state.users.users);
 
     useEffect(() => {
-      dispatch(fetchAllUser());
+      dispatch(fetchAllUser()).then(unwrapResult)
+      .catch((err) => {
+        if(err.name !== 'ConditionError'){
+          toast(err.message, { type: "error" });
+        }
+      });
     }, [dispatch]);
 
     const onSubmitHandler = (value, action) => {

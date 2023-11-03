@@ -36,7 +36,9 @@ const SplashScreen = () => {
               replace: true,
             });
           } 
-          toast(err.message, { type: "error" });
+          if(err.name !== "ConditionError") {
+            toast(err.message, { type: "error" });
+          }
         });
     }
   }, [navigate, dispatch, location, isLogin]);

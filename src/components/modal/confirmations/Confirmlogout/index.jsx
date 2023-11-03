@@ -17,7 +17,7 @@ function ConfirmLogout(props) {
         toast("Logout was successful", { type: "success" });
       })
       .catch((err) => {
-        if (err.status === 401) {
+        if (err.status === 401 && err.name !== 'ConditionError') {
           toast(err.message, { type: "error" });
         } else {
           toast("Failed to Logout", { type: "error" });

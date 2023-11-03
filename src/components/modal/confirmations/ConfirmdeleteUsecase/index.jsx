@@ -17,9 +17,9 @@ function ConfirmDeleteUsecase(props) {
         toast("Use Case Deleted", { type: "success" });
       })
       .catch((err) => {
-        toast(err.message, {
-          type: "error",
-        });
+        if(err.name !== 'ConditionError'){
+          toast(err.message, { type: "error" });
+        }
       })
       .finally(() => {
         props.onClose();

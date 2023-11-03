@@ -19,10 +19,12 @@ function UseCaseSettings() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllUsecases())
-    .then(unwrapResult)
-    .catch((err)=>{
-      toast(err.message,{type:'error'})
-    });
+      .then(unwrapResult)
+      .catch((err) => {
+        if (err.name !== "ConditionError") {
+          toast(err.message, { type: "error" });
+        }
+      });
   }, [dispatch]);
   return (
     <>

@@ -23,9 +23,9 @@ function ConfirmDeleteUser(props) {
         });
       })
       .catch((err) => {
-        toast(err.message, {
-          type: "error",
-        });
+        if(err.name !== 'ConditionError'){
+          toast(err.message, { type: "error" });
+        }
       })
       .finally(() => {
         props.onClose();

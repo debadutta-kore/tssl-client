@@ -34,7 +34,9 @@ function AddNewUser(props) {
         if (error.data && error.data.email) {
           actions.setFieldError("email", error.data.email);
         } else {
-          toast(error.message, { type: "error" });
+          if(error.name !== 'ConditionError') {
+            toast(error.message, { type: "error" });
+          }
           props.onClose();
         }
       })

@@ -14,10 +14,12 @@ function AccessControls() {
 
   useEffect(() => {
     dispatch(fetchControl())
-    .then(unwrapResult)
-    .catch((err)=>{
-      toast(err.message,{type:'error'})
-    });
+      .then(unwrapResult)
+      .catch((err) => {
+        if (err.name !== "ConditionError") {
+          toast(err.message, { type: "error" });
+        }
+      });
   }, [dispatch]);
 
   const onChangeAccessHandler = debounce((event) => {

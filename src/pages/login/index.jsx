@@ -35,15 +35,17 @@ function Login() {
       } else {
         navigate("/home");
       }
-    }).catch(({data,message}) => {
+    }).catch((err) => {
       if (typeof data === 'object') {
-        if (data.password) {
-          action.setFieldError('password', data.password);
+        if (err.data.password) {
+          action.setFieldError('password', err.data.password);
         } else {
-          action.setFieldError('email', data.email);
+          action.setFieldError('email', err.data.email);
         }
       } else {
-        toast(message, { type: "error" });
+        if(err.name !== "ConditionError") {
+          toast(err.message, { type: "error" });
+        }
       }
     }).finally(() => {
       action.setSubmitting(false);

@@ -25,7 +25,9 @@ function Home() {
     dispatch(fetchAllUsecases())
       .then(unwrapResult)
       .catch((err) => {
-        toast(err.message, { type: "error" });
+        if(err.name !== 'ConditionError'){
+          toast(err.message, { type: "error" });
+        }
       });
   }, [dispatch]);
 

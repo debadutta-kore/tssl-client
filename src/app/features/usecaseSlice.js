@@ -1,25 +1,19 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import request from "../../utilities/request";
+import { requestErrorHandler } from "../../utilities";
 
 export const addUsecase = createAsyncThunk(
   "addUsecase",
   async (arg, thunkApi) => {
-    try {
-      const res = await request({
-        url: "/usecase/add",
-        method: "POST",
-        data: {
-          usecaseId: arg.usecaseId,
-        },
-      });
-      if (res.status === 201) {
-        return thunkApi.fulfillWithValue(res.data);
-      } else {
-        return thunkApi.rejectWithValue("Unable to add usecase");
-      }
-    } catch (err) {
-      return thunkApi.rejectWithValue("Something Went wrong");
-    }
+    return await request({
+      url: "/usecase/add",
+      method: "POST",
+      data: {
+        usecaseId: arg.usecaseId,
+      },
+    })
+      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
     condition: (arg, { getState }) => {
@@ -36,19 +30,12 @@ export const addUsecase = createAsyncThunk(
 export const deleteUsecase = createAsyncThunk(
   "deleteUsecase",
   async (arg, thunkApi) => {
-    try {
-      const res = await request({
-        url: `/usecase/delete/${arg.id}`,
-        method: "DELETE",
-      });
-      if (res.status === 204) {
-        return thunkApi.fulfillWithValue();
-      } else {
-        return thunkApi.rejectWithValue("Unable to delete this");
-      }
-    } catch (err) {
-      return thunkApi.rejectWithValue("Something went wrong");
-    }
+    return await request({
+      url: `/usecase/delete/${arg.id}`,
+      method: "DELETE",
+    })
+      .then(() => thunkApi.fulfillWithValue())
+      .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
     condition: (arg, { getState }) => {
@@ -65,19 +52,12 @@ export const deleteUsecase = createAsyncThunk(
 export const fetchAllUsecases = createAsyncThunk(
   "fetchAllUsecases",
   async (_, thunkApi) => {
-    try {
-      const res = await request({
-        url: "/usecase/all",
-        method: "GET",
-      });
-      if (res.status === 200) {
-        return thunkApi.fulfillWithValue(res.data);
-      } else {
-        return thunkApi.rejectWithValue("unable to fetch data");
-      }
-    } catch (err) {
-      return thunkApi.rejectWithValue("Unable to update data");
-    }
+    return await request({
+      url: "/usecase/all",
+      method: "GET",
+    })
+      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
     condition: (_, { getState }) => {
@@ -94,30 +74,22 @@ export const fetchAllUsecases = createAsyncThunk(
 export const updateUsecase = createAsyncThunk(
   "updateUsecase",
   async (arg, thunkApi) => {
-    try {
-      const res = await request({
-        url: "/usecase/update",
-        method:'PUT',
-        data: { enable: arg.enable ? 1 : 0, usecaseId: arg.id },
-      });
-      if (res.ok) {
-        return thunkApi.fulfillWithValue(res.data);
-      } else {
-        return thunkApi.rejectWithValue("Unable to process your request");
-      }
-    } catch (err) {
-      return thunkApi.rejectWithValue("Unable to process your request");
-    }
+    return await request({
+      url: "/usecase/update",
+      method: "PUT",
+      data: { enable: arg.enable ? 1 : 0, usecaseId: arg.id },
+    })
+      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
-    condition(arg, { getState }) {
-      const { usecases } = getState();
-      if (arg && arg.id && typeof arg.enable !== "undefined" && !usecases.isLoading) {
+    condition(arg) {
+      if (arg && arg.id && typeof arg.enable !== "undefined") {
         return true;
       } else {
         return false;
       }
-    }
+    },
   }
 );
 
@@ -129,10 +101,10 @@ const initialState = {
 const usecaseSlice = createSlice({
   name: "usecases",
   initialState,
-  reducers:{
-    resetUsecase(){
+  reducers: {
+    resetUsecase() {
       return initialState;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(addUsecase.fulfilled, (state, action) => {
@@ -150,9 +122,9 @@ const usecaseSlice = createSlice({
     builder.addCase(updateUsecase.fulfilled, (state, action) => {
       state.usecases = state.usecases.map((usecase) => {
         if (usecase.usecaseId === action.meta.arg.id) {
-          usecase.enable = action.meta.arg.enable ? 1: 0;
+          usecase.enable = action.meta.arg.enable ? 1 : 0;
         }
-        return usecase
+        return usecase;
       });
       state.isLoading = false;
     });
@@ -160,6 +132,10 @@ const usecaseSlice = createSlice({
     builder.addCase(fetchAllUsecases.fulfilled, (state, action) => {
       state.usecases = action.payload;
       state.isLoading = false;
+    });
+
+    builder.addCase("reset", () => {
+      return initialState;
     });
 
     builder.addMatcher(
@@ -188,6 +164,6 @@ const usecaseSlice = createSlice({
   },
 });
 
-export const {resetUsecase} = usecaseSlice.actions;
+export const { resetUsecase } = usecaseSlice.actions;
 
 export default usecaseSlice.reducer;

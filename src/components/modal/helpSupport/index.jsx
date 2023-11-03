@@ -36,8 +36,8 @@ function HelpSupport(props) {
       .then(() => {
         toast("Your response sent successfully!", { type: "success" });
       })
-      .catch(() => {
-        toast("Something Went Wrong", { type: "error" });
+      .catch((error) => {
+        toast(error.message, { type: "error" });
       })
       .finally(() => {
         action.setSubmitting(false);

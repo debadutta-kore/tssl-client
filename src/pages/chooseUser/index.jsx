@@ -12,11 +12,15 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { updateSession } from "../../app/features/authSlice";
 import { toast } from "react-toastify";
 import withRoleValidation from "../../components/hoc/validateRoute";
+import LoadingSpinner from "../../components/loadingSpinner";
 
 const ChooseUser = withRoleValidation(
   function ChooseUser() {
     const [addNewUser, setAddNewUser] = useState(false);
-    const isChoosedUser = useSelector((state) => state.auth.choosedUser);
+    const { isChoosedUser, isLoading } = useSelector((state) => ({
+      isChoosedUser: state.auth.choosedUser,
+      isLoading: state.users.isLoading,
+    }));
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const users = useSelector((state) => state.users.users);
@@ -27,22 +31,18 @@ const ChooseUser = withRoleValidation(
 
     const onSubmitHandler = (value, action) => {
       const userId = value.user.trim();
-      if (userId) {
         dispatch(updateSession(userId))
           .then(() => {
             //navigate to home
             navigate("/home");
           })
-          .catch(() => {
+          .catch((err) => {
             //notify user
-            toast("Something went wrong", { type: "error" });
+            toast(err.message, { type: "error" });
           })
           .finally(() => {
             action.setSubmitting(false);
           });
-      } else {
-        action.setFieldError("user", "error");
-      }
     };
 
     return !isChoosedUser ? (
@@ -67,16 +67,20 @@ const ChooseUser = withRoleValidation(
                       name={user.name}
                       value={user.id}
                       key={user.id}
-                      onDelete={()=>resetForm({user:''})}
+                      onDelete={() => resetForm({ user: "" })}
                     />
                   ))}
                 </ul>
-              ) : (
+              ) : !isLoading ? (
                 <div className={style["choose-user-placeholder"]}>
                   <h3>No Users Added Yet.</h3>
                   <span>
                     Please add user by clicking on the “+ Add User” button.
                   </span>
+                </div>
+              ) : (
+                <div className={"loading-container"}>
+                  <LoadingSpinner />
                 </div>
               )}
               <Button

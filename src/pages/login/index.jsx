@@ -35,7 +35,7 @@ function Login() {
       } else {
         navigate("/home");
       }
-    }).catch((data) => {
+    }).catch(({data,message}) => {
       if (typeof data === 'object') {
         if (data.password) {
           action.setFieldError('password', data.password);
@@ -43,7 +43,7 @@ function Login() {
           action.setFieldError('email', data.email);
         }
       } else {
-        toast("Something Went Wrong", { type: 'error' })
+        toast(message, { type: "error" });
       }
     }).finally(() => {
       action.setSubmitting(false);

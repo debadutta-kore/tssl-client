@@ -1,150 +1,152 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import request from "../../utilities/request";
-import { resetControl } from "./controlSlice";
-import { resetUsecase } from "./usecaseSlice";
-import { resetUsers } from "./usersSlice";
+import { requestErrorHandler } from "../../utilities";
 
-export const login = createAsyncThunk('login', async (arg, thunkApi) => {
-    try {
-        const res = await request(arg);
-        if (res.status === 200) {
-            return thunkApi.fulfillWithValue(res.data);
-        } else if(res.status === 400) { 
-            return thunkApi.rejectWithValue(res.data);
-        }
-    } catch (err) {
-        return thunkApi.rejectWithValue('Internal Server Error');
-    }
+export const login = createAsyncThunk("login", async (arg, thunkApi) => {
+  return await request(arg)
+    .then((res) => thunkApi.fulfillWithValue(res.data))
+    .catch(requestErrorHandler.bind(null, thunkApi));
 });
 
-export const logout = createAsyncThunk('logout', async (arg, thunkApi) => {
-    try {
-        const res = await request({
-            url: `/auth/logout`,
-            method: 'DELETE'
-        });
-        if (res.status === 204) {
-            thunkApi.dispatch(resetControl());
-            thunkApi.dispatch(resetUsecase());
-            thunkApi.dispatch(resetUsers());
-            return thunkApi.fulfillWithValue()
-        } else {
-            return thunkApi.rejectWithValue('unable to logout');
-        }
-    } catch (err) {
-        return thunkApi.rejectWithValue('something went wrong');
-    }
-}, {
+export const logout = createAsyncThunk(
+  "logout",
+  async (arg, thunkApi) => {
+    return await request({
+      url: `/auth/logout`,
+      method: "DELETE",
+    })
+      .then(() => {
+        thunkApi.dispatch({ type: "reset" });
+        return thunkApi.fulfillWithValue();
+      })
+      .catch(requestErrorHandler.bind(null, thunkApi));
+  },
+  {
     condition: (_, { getState }) => {
-        const { auth } = getState();
-        if (!auth.isLoading && auth.isLogin) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-});
+      const { auth } = getState();
+      if (!auth.isLoading && auth.isLogin) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  }
+);
 
-export const loginWithSession = createAsyncThunk('loginWithSession', async (arg, thunkApi) => {
-    try {
-        const res = await request({
-            url: '/auth/session',
-            method: 'GET'
-        });
-        if (res.status === 200) {
-            return thunkApi.fulfillWithValue(res.data);
-        } else {
-            return thunkApi.rejectWithValue('Unauthorize user');
-        }
-    } catch (err) {
-        return thunkApi.rejectWithValue('Internal Server Error');
-    }
-}, {
+export const loginWithSession = createAsyncThunk(
+  "loginWithSession",
+  async (arg, thunkApi) => {
+    return await request({
+      url: "/auth/session",
+      method: "GET",
+    })
+      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .catch(requestErrorHandler.bind(null, thunkApi));
+  },
+  {
     condition(_, { getState }) {
-        const { auth } = getState();
-        if (!auth.isLogin && !auth.isLoading) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-})
+      const { auth } = getState();
+      if (!auth.isLogin && !auth.isLoading) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  }
+);
 
-export const updateSession = createAsyncThunk('updateSession', async (userId, thunkApi) => {
-    try {
-        const res = await request({
-            url: '/auth/session',
-            method: 'PUT',
-            data: { userId }
-        });
-        if (res.status === 200) {
-            return thunkApi.fulfillWithValue(res.data);
-        } else {
-            return thunkApi.rejectWithValue('something went wrong');
-        }
-    } catch (err) {
-        return thunkApi.rejectWithValue('something went wrong');
-    }
-}, {
+export const updateSession = createAsyncThunk(
+  "updateSession",
+  async (userId, thunkApi) => {
+    return await request({
+      url: "/auth/session",
+      method: "PUT",
+      data: { userId },
+    })
+      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .catch(requestErrorHandler.bind(null, thunkApi));
+  },
+  {
     condition(arg, { getState }) {
-        const { auth } = getState();
-        if (arg && !auth.isLoading && !auth.choosedUser) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-})
+      const { auth } = getState();
+      if (arg && !auth.isLoading && !auth.choosedUser) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  }
+);
 
 const initialState = {
-    role: '',
-    isLogin: false,
-    isLoading: false,
-    choosedUser: false
-}
+  role: "",
+  isLogin: false,
+  isLoading: false,
+  choosedUser: false,
+};
 
 const authSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers:{
-        resetAuth(){
-            return initialState;
-        }
+  name: "auth",
+  initialState,
+  reducers: {
+    resetAuth() {
+      return initialState;
     },
-    extraReducers: (builder) => {
-        builder.addCase(login.fulfilled, (state, action) => {
-            state.role = action.payload.role;
-            state.isLogin = true;
-            state.isLoading = false;
-        })
+  },
+  extraReducers: (builder) => {
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.role = action.payload.role;
+      state.isLogin = true;
+      state.isLoading = false;
+    });
 
-        builder.addCase(logout.fulfilled, () => {
-            return initialState;
-        });
+    builder.addCase(logout.fulfilled, () => {
+      return initialState;
+    });
 
-        builder.addCase(loginWithSession.fulfilled, (state, action) => {
-            state.role = action.payload.role;
-            state.isLoading = false;
-            state.isLogin = true;
-            if(action.payload.role === 'admin') {
-                state.choosedUser = action.payload.isChoosedUser;
-            }
-        })
+    builder.addCase(loginWithSession.fulfilled, (state, action) => {
+      state.role = action.payload.role;
+      state.isLoading = false;
+      state.isLogin = true;
+      if (action.payload.role === "admin") {
+        state.choosedUser = action.payload.isChoosedUser;
+      }
+    });
 
-        builder.addCase(updateSession.fulfilled, (state) => {
-            state.isLoading = false;
-            state.choosedUser = true;
-        })
+    builder.addCase(updateSession.fulfilled, (state) => {
+      state.isLoading = false;
+      state.choosedUser = true;
+    });
 
-        builder.addMatcher(isAnyOf(login.rejected, logout.rejected, loginWithSession.rejected, updateSession.rejected), (state) => {
-            state.isLoading = false;
-        })
+    builder.addCase("reset", () => {
+      return initialState;
+    });
 
-        builder.addMatcher(isAnyOf(login.pending, logout.pending, loginWithSession.pending, updateSession.pending), (state) => {
-            state.isLoading = true;
-        })
-    }
+    builder.addMatcher(
+      isAnyOf(
+        login.rejected,
+        logout.rejected,
+        loginWithSession.rejected,
+        updateSession.rejected
+      ),
+      (state) => {
+        state.isLoading = false;
+      }
+    );
+
+    builder.addMatcher(
+      isAnyOf(
+        login.pending,
+        logout.pending,
+        loginWithSession.pending,
+        updateSession.pending
+      ),
+      (state) => {
+        state.isLoading = true;
+      }
+    );
+  },
 });
 
-export const {resetAuth} = authSlice.actions;
+export const { resetAuth } = authSlice.actions;
 export default authSlice.reducer;

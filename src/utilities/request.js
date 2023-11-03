@@ -6,7 +6,7 @@ const axiosRequest = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
-  validateStatus: (status)=> (status <= 404),
+  validateStatus: (status)=> (status < 300),
   withCredentials: true
 });
 /**

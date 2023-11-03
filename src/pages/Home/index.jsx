@@ -8,30 +8,50 @@ import UseCaseCard from "../../components/card/usecaseCard";
 import comingSoon from "../../assets/icons/coming-soon.svg";
 import HomeLayout from "../../components/layout/homeLayout";
 import AddUseCase from "../../components/modal/addUseCase";
+import LoadingSpinner from "../../components/loadingSpinner";
+import { toast } from "react-toastify";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 function Home() {
-  const {role, usecases} = useSelector((state) => ({usecases: state.usecases.usecases, role: state.auth.role}));
+  const { role, usecases, isLoading } = useSelector((state) => ({
+    usecases: state.usecases.usecases,
+    isLoading: state.usecases.isLoading,
+    role: state.auth.role,
+  }));
   const [addUsecase, setAddUsecase] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchAllUsecases());
+    dispatch(fetchAllUsecases())
+      .then(unwrapResult)
+      .catch((err) => {
+        toast(err.message, { type: "error" });
+      });
   }, [dispatch]);
 
   const filteredUsecase = usecases.filter(({ enable }) => enable === 1);
   let placeHolder;
   if (filteredUsecase.length === 0) {
-    if (role === "admin") {
+    if (isLoading) {
       placeHolder = (
+        <div className="loading-container">
+          <LoadingSpinner />
+        </div>
+      );
+    } else {
+      if (role === "admin") {
+        placeHolder = (
           <div className={style["placeholder"]}>
             <img src={illustration} width={200} height={100} />
             <h3>No Use-Cases Added Yet!</h3>
             <h4>To add use-case press on the below button</h4>
-            <Button onClick={() => setAddUsecase(!addUsecase)}>Add Use Case</Button>
+            <Button onClick={() => setAddUsecase(!addUsecase)}>
+              Add Use Case
+            </Button>
           </div>
-      );
-    } else {
-      placeHolder = (
+        );
+      } else {
+        placeHolder = (
           <div className={style["placeholder"]}>
             <img
               src={comingSoon}
@@ -42,7 +62,8 @@ function Home() {
             />
             <h3>Coming Soon!</h3>
           </div>
-      );
+        );
+      }
     }
   }
   return (

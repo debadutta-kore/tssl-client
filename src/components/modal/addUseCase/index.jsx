@@ -24,7 +24,7 @@ function AddUseCase(props) {
     for (const { usecaseId } of usecases) {
       if (usecaseId === id) {
         isPresent = true;
-      } 
+      }
     }
     return !isPresent;
   });
@@ -32,23 +32,29 @@ function AddUseCase(props) {
   const onSelectUsecase = (usecase) => {
     setSelectedUseCase(usecase);
     setOpenDropDown(false);
-  }
+  };
 
   const onSaveUsecase = () => {
     setIsLoading(true);
-    dispatch(addUsecase({
-      usecaseId: selectedUseCase.id
-    }))
+    dispatch(
+      addUsecase({
+        usecaseId: selectedUseCase.id,
+      })
+    )
       .then(unwrapResult)
       .then(() => {
-        toast(`${selectedUseCase.name} Use Case Added Successfully`, { type: 'success' })
-      }).catch(() => {
-        toast(`${selectedUseCase.name} use case could not be added due to an error`, { type: 'error' })
-      }).finally(() => {
+        toast(`${selectedUseCase.name} Use Case Added Successfully`, {
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        toast(err.message, { type: "error" });
+      })
+      .finally(() => {
         setIsLoading(false);
         props.onClose();
       });
-  }
+  };
 
   return (
     <Modal>
@@ -83,12 +89,19 @@ function AddUseCase(props) {
                 >
                   {selectedUseCase && selectedUseCase.name}
                 </span>
-                {<span
-                  className={style["dropdown-ctn__select__status"]}
-                  style={{ display: selectedUseCase && selectedUseCase.isComingSoon ? "initial" : "none" }}
-                >
-                  (Coming Soon)
-                </span>}
+                {
+                  <span
+                    className={style["dropdown-ctn__select__status"]}
+                    style={{
+                      display:
+                        selectedUseCase && selectedUseCase.isComingSoon
+                          ? "initial"
+                          : "none",
+                    }}
+                  >
+                    (Coming Soon)
+                  </span>
+                }
               </div>
               <button
                 className={style["chavron-btn"]}
@@ -104,13 +117,23 @@ function AddUseCase(props) {
             >
               {notAddedUsecases.map((usecase) => (
                 <li
-                  className={(selectedUseCase && usecase.id === selectedUseCase.id) ? `${style["dropdown-options__selection"]} ${style['selected']}` : style["dropdown-options__selection"]}
+                  className={
+                    selectedUseCase && usecase.id === selectedUseCase.id
+                      ? `${style["dropdown-options__selection"]} ${style["selected"]}`
+                      : style["dropdown-options__selection"]
+                  }
                   key={usecase.id}
-                  onClick={onSelectUsecase.bind(null, { id: usecase.id, name: usecase.name, isComingSoon: usecase.isComingSoon })}
+                  onClick={onSelectUsecase.bind(null, {
+                    id: usecase.id,
+                    name: usecase.name,
+                    isComingSoon: usecase.isComingSoon,
+                  })}
                 >
                   <div className={style["dropdown-options__selection__info"]}>
                     <span
-                      className={style["dropdown-options__selection__info__name"]}
+                      className={
+                        style["dropdown-options__selection__info__name"]
+                      }
                     >
                       {usecase.name}
                     </span>
@@ -131,10 +154,21 @@ function AddUseCase(props) {
             </ul>
           </div>
           <div className={style["btn-container"]}>
-            <Button className={style["btn-cancel"]} onClick={props.onClose} disabled={isLoading}>
+            <Button
+              className={style["btn-cancel"]}
+              onClick={props.onClose}
+              disabled={isLoading}
+            >
               Cancel
             </Button>
-            <Button className={style["btn-submit"]} onClick={onSaveUsecase} disabled={!selectedUseCase} isLoading={isLoading}>Save</Button>
+            <Button
+              className={style["btn-submit"]}
+              onClick={onSaveUsecase}
+              disabled={!selectedUseCase}
+              isLoading={isLoading}
+            >
+              Save
+            </Button>
           </div>
         </Card>
       </ModalBody>

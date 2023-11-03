@@ -1,29 +1,21 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import request from "../../utilities/request";
+import { requestErrorHandler } from "../../utilities";
 
 export const createUser = createAsyncThunk(
   "createUser",
   async (arg, thunkApi) => {
-    try {
-      const res = await request({
-        url: "/account/user",
-        method: "POST",
-        data: {
-          email: arg.email,
-          password: arg.password,
-          name: arg.name
-        },
-      });
-      if (res.status === 201) {
-        return thunkApi.fulfillWithValue(res.data);
-      } else if (res.status === 400 && res.data?.email) {
-        return thunkApi.rejectWithValue({email: res.data.email});
-      } else {
-        return thunkApi.rejectWithValue('not able to create user');
-      }
-    } catch (err) {
-      return thunkApi.rejectWithValue('something went wrong')
-    }
+    return await request({
+      url: "/account/user",
+      method: "POST",
+      data: {
+        email: arg.email,
+        password: arg.password,
+        name: arg.name,
+      },
+    })
+      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
     condition: (arg, { getState }) => {
@@ -46,19 +38,12 @@ export const createUser = createAsyncThunk(
 export const deleteUser = createAsyncThunk(
   "deleteUser",
   async (arg, thunkApi) => {
-    try {
-      const res = await request({
-        url: `/account/user/${arg.userId}`,
-        method: "DELETE",
-      });
-      if (res.status === 204) {
-        return thunkApi.fulfillWithValue();
-      } else {
-        return thunkApi.rejectWithValue("unable to delete user");
-      }
-    } catch (err) {
-      return thunkApi.rejectWithValue('something went wrong');
-    }
+    return await request({
+      url: `/account/user/${arg.userId}`,
+      method: "DELETE",
+    })
+      .then(() => thunkApi.fulfillWithValue())
+      .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
     condition: (arg, { getState }) => {
@@ -80,19 +65,12 @@ export const deleteUser = createAsyncThunk(
 export const fetchAllUser = createAsyncThunk(
   "fetchAllUsers",
   async (arg, thunkApi) => {
-    try {
-      const res = await request({
-        url: "/account/user",
-        method: "GET",
-      });
-      if (res.status === 200) {
-        return thunkApi.fulfillWithValue(res.data);
-      } else {
-        return thunkApi.rejectWithValue("not able to fetch all user");
-      }
-    } catch (err) {
-      return thunkApi.rejectWithValue('something went wrong');
-    }
+    return await request({
+      url: "/account/user",
+      method: "GET",
+    })
+      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
     condition: (arg, { getState }) => {
@@ -106,36 +84,44 @@ const initialState = {
   isLoading: false,
   users: [],
 };
+
 const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers:{
-    resetUsers(){
+  reducers: {
+    resetUsers() {
       return initialState;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.users.push(action.payload);
     });
+
     builder.addCase(fetchAllUser.fulfilled, (state, action) => {
       state.users = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(deleteUser.fulfilled, (state, action) => {
 
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
       state.users = state.users.filter(
         (user) => user.id !== action.meta.arg.userId
       );
       state.isLoading = false;
     });
+
+    builder.addCase("reset", () => {
+      return initialState;
+    });
+
     builder.addMatcher(
       isAnyOf(createUser.rejected, fetchAllUser.rejected, deleteUser.rejected),
       (state) => {
         state.isLoading = false;
       }
     );
+
     builder.addMatcher(
       isAnyOf(createUser.pending, deleteUser.pending, fetchAllUser.pending),
       (state) => {
@@ -145,6 +131,6 @@ const userSlice = createSlice({
   },
 });
 
-export const {resetUsers} = userSlice.actions;
+export const { resetUsers } = userSlice.actions;
 
 export default userSlice.reducer;

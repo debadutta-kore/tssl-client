@@ -6,7 +6,7 @@ import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import AddNewUser from "../../components/modal/addNewUser";
 import UserOption from "../../components/userOption";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch} from "react-redux";
 import { fetchAllUser } from "../../app/features/usersSlice";
 import { useNavigate } from "react-router-dom";
 import { updateSession } from "../../app/features/authSlice";
@@ -16,16 +16,11 @@ import LoadingSpinner from "../../components/loadingSpinner";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { resetUsecase } from "../../app/features/usecaseSlice";
 
-const ChooseUser = withRoleValidation(
-  function ChooseUser() {
+const Component = withRoleValidation(
+  function (props) {
     const [addNewUser, setAddNewUser] = useState(false);
-    const { isLoading } = useSelector((state) => ({
-      isChoosedUser: state.auth.choosedUser,
-      isLoading: state.users.isLoading,
-    }));
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const users = useSelector((state) => state.users.users);
 
     useEffect(() => {
       dispatch(fetchAllUser()).then(unwrapResult)
@@ -38,7 +33,7 @@ const ChooseUser = withRoleValidation(
 
     const onSubmitHandler = (value, action) => {
       const userId = value.user.trim();
-      const [user] =  users.filter(({id})=>id===userId);
+      const [user] =  props.users.filter(({id})=>id===userId);
       dispatch(updateSession({userId, user}))
         .then(() => {
           //navigate to home
@@ -69,9 +64,9 @@ const ChooseUser = withRoleValidation(
         <Formik initialValues={{ user: "" }} onSubmit={onSubmitHandler}>
           {({ isSubmitting, values, resetForm }) => (
             <Form className={style["choose-user-form"]}>
-              {users.length > 0 ? (
+              {props.users.length > 0 ? (
                 <ul className={style["users-list"]}>
-                  {users.map((user) => (
+                  {props.users.map((user) => (
                     <UserOption
                       name={user.name}
                       value={user.id}
@@ -80,7 +75,7 @@ const ChooseUser = withRoleValidation(
                     />
                   ))}
                 </ul>
-              ) : !isLoading ? (
+              ) : !props.isLoading ? (
                 <div className={style["choose-user-placeholder"]}>
                   <h3>No Users Added Yet.</h3>
                   <span>
@@ -108,4 +103,11 @@ const ChooseUser = withRoleValidation(
   ["admin"]
 );
 
+const mapStateToProp = (state)=>({
+  isChoosedUser: state.auth.choosedUser,
+  isLoading: state.users.isLoading,
+  users: state.users.users
+});
+
+const ChooseUser = connect(mapStateToProp)(Component);
 export default ChooseUser;

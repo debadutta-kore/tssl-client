@@ -2,7 +2,7 @@ import style from "./index.module.sass";
 import illustration from "../../assets/Illustration.svg";
 import Button from "../../components/button";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { fetchAllUsecases } from "../../app/features/usecaseSlice";
 import UseCaseCard from "../../components/card/usecaseCard";
 import comingSoon from "../../assets/icons/coming-soon.svg";
@@ -12,12 +12,7 @@ import LoadingSpinner from "../../components/loadingSpinner";
 import { toast } from "react-toastify";
 import { unwrapResult } from "@reduxjs/toolkit";
 
-function Home() {
-  const { role, usecases, isLoading } = useSelector((state) => ({
-    usecases: state.usecases.usecases,
-    isLoading: state.usecases.isLoading,
-    role: state.auth.role,
-  }));
+function Component(props) {
   const [addUsecase, setAddUsecase] = useState(false);
   const dispatch = useDispatch();
 
@@ -31,17 +26,17 @@ function Home() {
       });
   }, [dispatch]);
 
-  const filteredUsecase = usecases.filter(({ enable }) => enable === 1);
+  const filteredUsecase = props.usecases.filter(({ enable }) => enable === 1);
   let placeHolder;
   if (filteredUsecase.length === 0) {
-    if (isLoading) {
+    if (props.isLoading) {
       placeHolder = (
         <div className="loading-container">
           <LoadingSpinner />
         </div>
       );
     } else {
-      if (role === "admin") {
+      if (props.role === "admin") {
         placeHolder = (
           <div className={style["placeholder"]}>
             <img src={illustration} width={200} height={100} />
@@ -94,4 +89,12 @@ function Home() {
     </HomeLayout>
   );
 }
+
+const mapStateToProp = (state)=>({
+  usecases: state.usecases.usecases,
+  isLoading: state.usecases.isLoading,
+  role: state.auth.role,
+});
+
+const Home =  connect(mapStateToProp)(Component);
 export default Home;

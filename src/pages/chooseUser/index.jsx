@@ -8,17 +8,18 @@ import AddNewUser from "../../components/modal/addNewUser";
 import UserOption from "../../components/userOption";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../../app/features/usersSlice";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { updateSession } from "../../app/features/authSlice";
 import { toast } from "react-toastify";
 import withRoleValidation from "../../components/hoc/validateRoute";
 import LoadingSpinner from "../../components/loadingSpinner";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { resetUsecase } from "../../app/features/usecaseSlice";
 
 const ChooseUser = withRoleValidation(
   function ChooseUser() {
     const [addNewUser, setAddNewUser] = useState(false);
-    const { isChoosedUser, isLoading } = useSelector((state) => ({
+    const { isLoading } = useSelector((state) => ({
       isChoosedUser: state.auth.choosedUser,
       isLoading: state.users.isLoading,
     }));
@@ -28,30 +29,32 @@ const ChooseUser = withRoleValidation(
 
     useEffect(() => {
       dispatch(fetchAllUser()).then(unwrapResult)
-      .catch((err) => {
-        if(err.name !== 'ConditionError'){
-          toast(err.message, { type: "error" });
-        }
-      });
+        .catch((err) => {
+          if (err.name !== 'ConditionError') {
+            toast(err.message, { type: "error" });
+          }
+        });
     }, [dispatch]);
 
     const onSubmitHandler = (value, action) => {
       const userId = value.user.trim();
-        dispatch(updateSession(userId))
-          .then(() => {
-            //navigate to home
-            navigate("/home");
-          })
-          .catch((err) => {
-            //notify user
-            toast(err.message, { type: "error" });
-          })
-          .finally(() => {
-            action.setSubmitting(false);
-          });
+      const [user] =  users.filter(({id})=>id===userId);
+      dispatch(updateSession({userId, user}))
+        .then(() => {
+          //navigate to home
+          dispatch(resetUsecase());
+          navigate("/home");
+        })
+        .catch((err) => {
+          //notify user
+          toast(err.message, { type: "error" });
+        })
+        .finally(() => {
+          action.setSubmitting(false);
+        });
     };
 
-    return !isChoosedUser ? (
+    return (
       <Card className={style["choose-user"]}>
         {addNewUser && (
           <AddNewUser onClose={() => setAddNewUser(!addNewUser)} />
@@ -100,9 +103,7 @@ const ChooseUser = withRoleValidation(
           )}
         </Formik>
       </Card>
-    ) : (
-      <Navigate to="/home" replace={true} />
-    );
+    )
   },
   ["admin"]
 );

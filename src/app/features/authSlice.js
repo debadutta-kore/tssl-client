@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import request from "../../utilities/request";
 import { requestErrorHandler } from "../../utilities";
+import { setControl } from "./controlSlice";
 
 export const login = createAsyncThunk("login", async (arg, thunkApi) => {
   return await request(arg)
@@ -57,19 +58,22 @@ export const loginWithSession = createAsyncThunk(
 
 export const updateSession = createAsyncThunk(
   "updateSession",
-  async (userId, thunkApi) => {
+  async ({userId, user}, thunkApi) => {
     return await request({
       url: "/auth/session",
       method: "PUT",
       data: { userId },
     })
-      .then((res) => thunkApi.fulfillWithValue(res.data))
+      .then((res) => {
+        thunkApi.dispatch(setControl(user))
+        return thunkApi.fulfillWithValue(res.data)
+      })
       .catch(requestErrorHandler.bind(null, thunkApi));
   },
   {
     condition(arg, { getState }) {
       const { auth } = getState();
-      if (arg && !auth.isLoading && !auth.choosedUser) {
+      if (arg && arg.userId && arg.user && !auth.isLoading) {
         return true;
       } else {
         return false;

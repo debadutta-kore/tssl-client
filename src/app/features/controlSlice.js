@@ -54,6 +54,11 @@ const control = createSlice({
   name: "control",
   initialState,
   reducers: {
+    setControl(state, action){
+      state.id = action.payload.id;
+      state.name = action.payload.name;
+      state.enable = action.payload.enable;
+    },
     resetControl() {
       return initialState;
     },
@@ -89,5 +94,5 @@ const control = createSlice({
   },
 });
 
-export const { resetControl } = control.actions;
+export const { resetControl, setControl } = control.actions;
 export default control.reducer;

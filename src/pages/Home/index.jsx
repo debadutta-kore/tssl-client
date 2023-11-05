@@ -25,7 +25,7 @@ function Home() {
     dispatch(fetchAllUsecases())
       .then(unwrapResult)
       .catch((err) => {
-        if(err.name !== 'ConditionError'){
+        if (err.name !== "ConditionError") {
           toast(err.message, { type: "error" });
         }
       });
@@ -81,9 +81,12 @@ function Home() {
               : style["usecases-grid-container-sm"]
           }
         >
-          {filteredUsecase.map((usecase,index) => (
+          {filteredUsecase.map((usecase, index) => (
             <li key={usecase.id} className={style["usecase-item"]}>
-              <UseCaseCard {...usecase} animationDelay={`${index/filteredUsecase.length}s`} />
+              <UseCaseCard
+                {...usecase}
+                animationDelay={`${index / filteredUsecase.length}s`}
+              />
             </li>
           ))}
         </ul>

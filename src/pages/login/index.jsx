@@ -36,7 +36,7 @@ function Login() {
         navigate("/home");
       }
     }).catch((err) => {
-      if (typeof data === 'object') {
+      if (typeof err.data === 'object') {
         if (err.data.password) {
           action.setFieldError('password', err.data.password);
         } else {

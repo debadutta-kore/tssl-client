@@ -81,9 +81,9 @@ function Home() {
               : style["usecases-grid-container-sm"]
           }
         >
-          {filteredUsecase.map((usecase) => (
+          {filteredUsecase.map((usecase,index) => (
             <li key={usecase.id} className={style["usecase-item"]}>
-              <UseCaseCard {...usecase} />
+              <UseCaseCard {...usecase} animationDelay={`${index/filteredUsecase.length}s`} />
             </li>
           ))}
         </ul>

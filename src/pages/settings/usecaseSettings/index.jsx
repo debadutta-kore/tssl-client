@@ -30,9 +30,9 @@ function UseCaseSettings() {
     <>
       {usecases.length > 0 ? (
         <ul className={style["usecase-setting-list"]}>
-          {usecases.map((usecase) => (
+          {usecases.map((usecase,index) => (
             <li key={usecase.id} className={style["usecase-setting"]}>
-              <UsecaseSetting {...usecase} />
+              <UsecaseSetting {...usecase} animationDelay={`${index/usecases.length}s`}/>
             </li>
           ))}
         </ul>

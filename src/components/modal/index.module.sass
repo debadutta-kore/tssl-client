@@ -8,6 +8,7 @@
     right: 0px
     z-index: 10
     overflow-y: scroll
+    animation: unfoldIn 1s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards
     .modal-body
         width: 90%
         height: 100%
@@ -21,3 +22,11 @@
             width: 50%
         @include mixins.device-style($device: 'lg')
             width: 40%
+
+@keyframes unfoldIn
+    0%
+        transform: scaleY(.005) scaleX(0)
+    50%
+        transform: scaleY(.005) scaleX(1)
+    100%
+        transform: scaleY(1) scaleX(1)

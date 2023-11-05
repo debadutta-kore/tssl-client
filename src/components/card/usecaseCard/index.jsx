@@ -6,7 +6,7 @@ function UseCaseCard(props) {
   const info = usecaseDb.find((usecase) => usecase.id === props.usecaseId);
   return (
     <Link to={info.isComingSoon ? "#" : `/chat/${info.id}`}>
-      <Card className={style["usecaseCard"]}>
+      <Card className={style["usecaseCard"]} style={{animationDelay: props.animationDelay}}>
         <div
           className={style["overlay"]}
           style={{ background: info.background }}

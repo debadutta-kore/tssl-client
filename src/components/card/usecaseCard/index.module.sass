@@ -8,6 +8,9 @@
     position: relative
     text-align: center
     padding: 5rem
+    transform: translateY(25px)
+    opacity: 0
+    animation: upwardAnimation 1s linear 1 forwards
     .overlay
         position: absolute
         top: 0
@@ -33,9 +36,20 @@
     span
         position: absolute
         right: 0
-        top:0
+        top: 0
         padding: 8px 12px
         border-top-right-radius: 12px
         border-bottom-left-radius: 12px
         background: #F04438
-        color:#FFFFFF
+        color: #FFFFFF
+        
+@keyframes upwardAnimation
+    0%
+        transform: translateY(20px)
+        opacity: 0.2
+    50%
+        transform: translateY(10px)
+        opacity: 0.5
+    100%
+        transform: translateY(0px)
+        opacity: 1

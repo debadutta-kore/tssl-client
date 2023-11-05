@@ -42,7 +42,7 @@ function UsecaseSetting(props) {
   }, 1000);
 
   return (
-    <Card className={style["setting-cards"]}>
+    <Card className={style["setting-cards"]} style={{animationDelay: props.animationDelay}}>
       {isDelete && (
         <ConfirmDeleteUsecase
           delete={{ id: props.id, name: info.name }}

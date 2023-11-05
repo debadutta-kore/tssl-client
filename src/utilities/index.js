@@ -31,11 +31,6 @@ export const requestErrorHandler = (thunkApi, err) => {
         message: "Oops! Something went wrong try again",
       });
     }
-  } else if (err.request && err.code === "ERR_NETWORK") {
-    return thunkApi.rejectWithValue({
-      status: 400,
-      message: "Please connect your device with internet",
-    });
   } else {
     return thunkApi.rejectWithValue({
       status: 500,

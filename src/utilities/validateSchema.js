@@ -21,15 +21,11 @@ export const fullNameSchema = Yup.string().required('Full name is required')
 
 export const emailSubjectSchema = Yup.string()
   .required('Please enter the mandatory details.')
-  .min(10, 'Email subject must be at least 10 character')
-  .max(50, 'Email subject can be at most 50 characters');
 
 export const emailBodySchema =  Yup
   .string()
   .trim()
   .required('Please enter the mandatory details.')
-  .min(10, 'Email body must be at least 10 characters long')
-  .max(1000, 'Email body cannot be longer than 1000 characters')
 
 const supportedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
 

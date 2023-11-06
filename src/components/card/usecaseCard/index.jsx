@@ -4,8 +4,9 @@ import usecaseDb from "../../../utilities/static-usecases.json";
 import { Link } from "react-router-dom";
 function UseCaseCard(props) {
   const info = usecaseDb.find((usecase) => usecase.id === props.usecaseId);
+  
   return (
-    <Link to={info.isComingSoon ? "#" : `/chat/${info.id}`}>
+    <Link to={info.isComingSoon ? "#" : `/chat/${info.id}`} aria-disabled={info.isComingSoon}>
       <Card className={style["usecaseCard"]} style={{animationDelay: props.animationDelay}}>
         <div
           className={style["overlay"]}

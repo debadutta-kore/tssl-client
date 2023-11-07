@@ -5,7 +5,7 @@ import chavronIcon from "../../../assets/icons/chavron.svg";
 import selectIcon from "../../../assets/icons/select.svg";
 import Button from "../../button";
 import Modal, { ModalBody } from "..";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import usecasesDb from "../../../utilities/static-usecases.json";
 import { useDispatch, useSelector } from "react-redux";
 import { addUsecase } from "../../../app/features/usecaseSlice";
@@ -18,6 +18,26 @@ function AddUseCase(props) {
   const [selectedUseCase, setSelectedUseCase] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const ref = useRef(null);
+
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (ref.current && ref.current.contains(event.target)) {
+        setOpenDropDown(!openDropDown);
+      } else {
+        setOpenDropDown(false);
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [openDropDown]);
 
   const notAddedUsecases = usecasesDb.filter(({ id }) => {
     let isPresent = false;
@@ -28,11 +48,6 @@ function AddUseCase(props) {
     }
     return !isPresent;
   });
-
-  const onSelectUsecase = (usecase) => {
-    setSelectedUseCase(usecase);
-    setOpenDropDown(false);
-  };
 
   const onSaveUsecase = () => {
     setIsLoading(true);
@@ -48,7 +63,7 @@ function AddUseCase(props) {
         });
       })
       .catch((err) => {
-        if(err.name !== 'ConditionError') {
+        if (err.name !== "ConditionError") {
           toast(err.message, { type: "error" });
         }
       })
@@ -74,86 +89,87 @@ function AddUseCase(props) {
           </div>
           <div className={style["select-usecase-form"]}>
             <span>Use Case</span>
-            <div
-              className={style["dropdown-ctn"]}
-              onClick={() => setOpenDropDown(!openDropDown)}
-            >
-              <div className={style["dropdown-ctn__select"]}>
-                <span
-                  className={style["dropdown-ctn__select__placeholder"]}
-                  style={{ display: !selectedUseCase ? "initial" : "none" }}
-                >
-                  Select use case
-                </span>
-                <span
-                  className={style["dropdown-ctn__select__name"]}
-                  style={{ display: selectedUseCase ? "initial" : "none" }}
-                >
-                  {selectedUseCase && selectedUseCase.name}
-                </span>
-                {
+            <div ref={ref}>
+              <div className={style["dropdown-ctn"]}>
+                <div className={style["dropdown-ctn__select"]}>
                   <span
-                    className={style["dropdown-ctn__select__status"]}
-                    style={{
-                      display:
-                        selectedUseCase && selectedUseCase.isComingSoon
-                          ? "initial"
-                          : "none",
-                    }}
+                    className={style["dropdown-ctn__select__placeholder"]}
+                    style={{ display: !selectedUseCase ? "initial" : "none" }}
                   >
-                    (Coming Soon)
+                    Select use case
                   </span>
-                }
-              </div>
-              <button
-                className={style["chavron-btn"]}
-                type="button"
-                onClick={() => setOpenDropDown(!openDropDown)}
-              >
-                <img src={chavronIcon} width={10} height={10} alt="chavron" />
-              </button>
-            </div>
-            <ul
-              className={style["dropdown-options"]}
-              style={{ display: openDropDown ? "flex" : "none" }}
-            >
-              {notAddedUsecases.map((usecase) => (
-                <li
-                  className={
-                    selectedUseCase && usecase.id === selectedUseCase.id
-                      ? `${style["dropdown-options__selection"]} ${style["selected"]}`
-                      : style["dropdown-options__selection"]
-                  }
-                  key={usecase.id}
-                  onClick={onSelectUsecase.bind(null, {
-                    id: usecase.id,
-                    name: usecase.name,
-                    isComingSoon: usecase.isComingSoon,
-                  })}
-                >
-                  <div className={style["dropdown-options__selection__info"]}>
+                  <span
+                    className={style["dropdown-ctn__select__name"]}
+                    style={{ display: selectedUseCase ? "initial" : "none" }}
+                  >
+                    {selectedUseCase && selectedUseCase.name}
+                  </span>
+                  {
                     <span
-                      className={
-                        style["dropdown-options__selection__info__name"]
-                      }
-                    >
-                      {usecase.name}
-                    </span>
-                    <span
-                      className={
-                        style["dropdown-options__selection__info__status"]
-                      }
+                      className={style["dropdown-ctn__select__status"]}
                       style={{
-                        display: usecase.isComingSoon ? "initial" : "none",
+                        display:
+                          selectedUseCase && selectedUseCase.isComingSoon
+                            ? "initial"
+                            : "none",
                       }}
                     >
                       (Coming Soon)
                     </span>
-                  </div>
-                  <img src={selectIcon} alt="selected icon" />
-                </li>
-              ))}
-            </ul>
+                  }
+                </div>
+                <button
+                  className={style["chavron-btn"]}
+                  type="button"
+                  onClick={() => setOpenDropDown(!openDropDown)}
+                >
+                  <img src={chavronIcon} width={10} height={10} alt="chavron" />
+                </button>
+              </div>
+              <ul
+                className={style["dropdown-options"]}
+                style={{ display: openDropDown ? "flex" : "none" }}
+              >
+                {notAddedUsecases.map((usecase) => (
+                  <li
+                    className={
+                      selectedUseCase && usecase.id === selectedUseCase.id
+                        ? `${style["dropdown-options__selection"]} ${style["selected"]}`
+                        : style["dropdown-options__selection"]
+                    }
+                    key={usecase.id}
+                    onClick={() => {
+                      setSelectedUseCase({
+                        id: usecase.id,
+                        name: usecase.name,
+                        isComingSoon: usecase.isComingSoon,
+                      });
+                    }}
+                  >
+                    <div className={style["dropdown-options__selection__info"]}>
+                      <span
+                        className={
+                          style["dropdown-options__selection__info__name"]
+                        }
+                      >
+                        {usecase.name}
+                      </span>
+                      <span
+                        className={
+                          style["dropdown-options__selection__info__status"]
+                        }
+                        style={{
+                          display: usecase.isComingSoon ? "initial" : "none",
+                        }}
+                      >
+                        (Coming Soon)
+                      </span>
+                    </div>
+                    <img src={selectIcon} alt="selected icon" />
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
           <div className={style["btn-container"]}>
             <Button

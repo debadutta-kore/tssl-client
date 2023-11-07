@@ -2,7 +2,7 @@
 .footer
     position: fixed
     bottom: 0px
-    padding: 15px 20px
+    padding: 8px 20px
     display: flex
     gap: 20px
     border-top: 1px solid
@@ -12,20 +12,11 @@
     width: 100%
     img
         margin-block: auto
-        width: 30%
-        height: 30%
-        @include mixins.device-style('sm')
-            width: 20%
-            height: 20%
-        @include mixins.device-style('md')
-            width: 15%
-            height: 15%
-        @include mixins.device-style('lg')
-            width: 10%
-            height: 10%
+        width: 6rem
+        height: auto
     & > span
         font-family: Inter
-        font-size: 20px
+        font-size: 15px
         font-weight: 400
         line-height: 32px
         letter-spacing: 0em

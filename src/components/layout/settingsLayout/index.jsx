@@ -44,7 +44,7 @@ const SettingsLayout = withRoleValidation(function SettingsLayout() {
           </button>}
         </nav>
       </Header>
-      <main className={style['settings-container']} style={{ bottom: pathParts[pathParts.length - 1] === 'settings' ? '9rem' : '4rem' }}>
+      <main className={style['settings-container']} style={{ bottom: pathParts[pathParts.length - 1] === 'settings' ? '8.5rem' : '3rem' }}>
         <Outlet context={{ setAddUsecase }} />
       </main>
       {pathParts[pathParts.length - 1] === 'settings' && <Button className={style["logout"]} onClick={() => setIsLogout(!islogout)}>

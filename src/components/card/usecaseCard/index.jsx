@@ -6,7 +6,7 @@ function UseCaseCard(props) {
   const info = usecaseDb.find((usecase) => usecase.id === props.usecaseId);
   
   return (
-    <Link to={info.isComingSoon ? "#" : `/chat/${info.id}`} aria-disabled={info.isComingSoon}>
+    <Link to={info.isComingSoon ? "#" : `/chat/${info.id}`} onClick={(e)=>info.isComingSoon && e.preventDefault()}>
       <Card className={style["usecaseCard"]} style={{animationDelay: props.animationDelay}}>
         <div
           className={style["overlay"]}

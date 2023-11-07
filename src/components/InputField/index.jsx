@@ -36,6 +36,11 @@ function InputField({ component, label, ...inputProps }) {
                 })
               ) : (
                 <input
+                  onFocusCapture={() => setFocus(true)}
+                  onBlurCapture={() => setFocus(false)}
+                  {...inputProps}
+                  {...field}
+                  id={id}
                   type={
                     inputProps.type === "password"
                       ? showPassword
@@ -43,11 +48,6 @@ function InputField({ component, label, ...inputProps }) {
                         : "password"
                       : inputProps.type
                   }
-                  onFocusCapture={() => setFocus(true)}
-                  onBlurCapture={() => setFocus(false)}
-                  {...inputProps}
-                  {...field}
-                  id={id}
                 />
               )}
               {inputProps.type === "password" &&

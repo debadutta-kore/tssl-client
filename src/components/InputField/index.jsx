@@ -23,7 +23,11 @@ function InputField({ component, label, ...inputProps }) {
           <div className={style["field"]}>
             <label htmlFor={id}>{label}</label>
             <div
-              className={focused? `${style['focus']} ${style["field-input"]}`: style["field-input"]}
+              className={
+                focused
+                  ? `${style["focus"]} ${style["field-input"]}`
+                  : style["field-input"]
+              }
               style={meta.touched && meta.error ? errorStyle : {}}
             >
               {component ? (
@@ -50,22 +54,21 @@ function InputField({ component, label, ...inputProps }) {
                   }
                 />
               )}
-              {inputProps.type === "password" &&
-                !(meta.touched && meta.error) && (
-                  <button
-                    onClick={() => setShowPassword(!showPassword)}
-                    type="button"
-                  >
-                    <img
-                      src={showPassword ? openEye : closeEye}
-                      alt="change-password-mode"
-                      width={20}
-                      height={20}
-                    />
-                  </button>
-                )}
               {meta.touched && meta.error && (
                 <img src={errorIcon} alt="error-icon" width={16} height={16} />
+              )}
+              {inputProps.type === "password" && (
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  type="button"
+                >
+                  <img
+                    src={showPassword ? openEye : closeEye}
+                    alt="change-password-mode"
+                    width={20}
+                    height={20}
+                  />
+                </button>
               )}
             </div>
             {meta.touched && meta.error && (

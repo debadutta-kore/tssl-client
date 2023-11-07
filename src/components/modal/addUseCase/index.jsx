@@ -118,13 +118,17 @@ function AddUseCase(props) {
                     </span>
                   }
                 </div>
-                <button
-                  className={style["chavron-btn"]}
-                  type="button"
-                  onClick={() => setOpenDropDown(!openDropDown)}
-                >
-                  <img src={chavronIcon} width={10} height={10} alt="chavron" />
-                </button>
+                <img
+                  src={chavronIcon}
+                  width={10}
+                  height={10}
+                  alt="chavron"
+                  className={
+                    openDropDown
+                      ? `${style["dropdown-icon"]} ${style["open"]}`
+                      : style["dropdown-icon"]
+                  }
+                />
               </div>
               <ul
                 className={style["dropdown-options"]}
@@ -154,16 +158,15 @@ function AddUseCase(props) {
                       >
                         {usecase.name}
                       </span>
-                      <span
-                        className={
-                          style["dropdown-options__selection__info__status"]
-                        }
-                        style={{
-                          display: usecase.isComingSoon ? "initial" : "none",
-                        }}
-                      >
-                        (Coming Soon)
-                      </span>
+                      {usecase.isComingSoon && (
+                        <span
+                          className={
+                            style["dropdown-options__selection__info__status"]
+                          }
+                        >
+                          (Coming Soon)
+                        </span>
+                      )}
                     </div>
                     <img src={selectIcon} alt="selected icon" />
                   </li>

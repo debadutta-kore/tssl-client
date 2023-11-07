@@ -26,6 +26,7 @@
         .dropdown-ctn
             width: 100%
             display: flex
+            align-items: center
             position: relative
             margin-top: 8px
             padding: 10px 14px
@@ -34,7 +35,7 @@
             user-select: none
             cursor: pointer
             &__select
-                width: 95%
+                margin-right: auto
                 font-size: 16px
                 &__placeholder
                     color: #667085
@@ -43,14 +44,11 @@
                 &__status
                     color: #667085
                     margin-left: 8px
-            .chavron-btn
-                background: none
-                border: none
-                outline: none
-                cursor: pointer
-                margin-left: auto
-                img
-                    vertical-align: middle
+            .dropdown-icon
+                vertical-align: middle
+                transition: transform 0.4s
+                &.open
+                    transform: rotate(180deg)
         .dropdown-options
             border-radius: 8px
             border: 1px solid #F2F4F7

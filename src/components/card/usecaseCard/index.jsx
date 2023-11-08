@@ -16,7 +16,7 @@ function UseCaseCard(props) {
           className={style["card-content"]}
           style={{ padding: info.icon ? "initial" : "50px" }}
         >
-          {info.icon && <img src={info.icon} width={80} height={80} />}
+          {info.icon && <img src={'/usecasesIcons/'+info.icon} width={80} height={80} />}
           <h3>{info.name}</h3>
         </div>
         {info.isComingSoon && <span>Coming soon</span>}

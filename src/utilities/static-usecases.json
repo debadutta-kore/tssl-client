@@ -3,7 +3,7 @@
     "id": "6369892b122b47f7862deac2dda02051",
     "name": "Food Safety",
     "theme":"#85E13A",
-    "icon": "/usecasesIcons/safety.svg",
+    "icon": "safety.svg",
     "background": "linear-gradient(137.55deg, #85E13A -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
     "isComingSoon": false,
     "url": "https://foodassist-demo.kore.ai/YumBrands/UI/login.html"
@@ -12,7 +12,7 @@
     "id": "f33e156ee67f4f669e77c1587497f474",
     "name": "Customer Service",
     "theme": "#FAC515",
-    "icon": "/usecasesIcons/Support.svg",
+    "icon": "Support.svg",
     "background": "linear-gradient(137.55deg, #FAC515 -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
     "isComingSoon": false,
     "url": "https://bots.kore.ai/webclient/0a337c9c51a940caa3e2a065ae8b0c6484ade056140b4f4886b9ffe7b82629e9st4c"
@@ -38,7 +38,7 @@
   {
     "id":"c48c38f828b94f8b8b510371e43d7312",
     "name": "Drive-Thru Automation",
-    "icon": "/usecasesIcons/delivered.svg",
+    "icon": "delivered.svg",
     "theme":"#A48AFB",
     "background": "linear-gradient(137.55deg, #A48AFB -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
     "isComingSoon": true,
@@ -48,7 +48,7 @@
     "id": "bcbda25106214b33a86e6dbf60c4dd73",
     "name": "Call-Center Automation",
     "theme": "#53B1FD",
-    "icon": "/usecasesIcons/agent-transfer.svg",
+    "icon": "agent-transfer.svg",
     "background": "linear-gradient(137.55deg, #53B1FD -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
     "isComingSoon": true,
     "url": ""
@@ -57,7 +57,7 @@
     "id": "dc4f9775e3824742a73f6e1df98f5f04",
     "name": "Operations Support",
     "theme": "#F38744",
-    "icon": "/usecasesIcons/service.svg",
+    "icon": "service.svg",
     "background": "linear-gradient(137.55deg, #F38744 -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
     "isComingSoon": true,
     "url": ""
@@ -65,7 +65,7 @@
   {
     "id": "e2d7acd63305427780c6104c8fae0d93",
     "name": "GBM",
-    "icon": "/usecasesIcons/conversation-testing.svg",
+    "icon": "conversation-testing.svg",
     "theme":"#2ED3B7",
     "background": "linear-gradient(137.55deg, #2ED3B7 -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)",
     "isComingSoon": true,

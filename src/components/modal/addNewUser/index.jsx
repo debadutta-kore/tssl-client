@@ -20,7 +20,7 @@ function AddNewUser(props) {
   const onAddUser = (value, actions) => {
     dispatch(
       createUser({
-        email: value.email,
+        email: value.email.toLowerCase(),
         name: value.fullName,
         password: value.password,
       })

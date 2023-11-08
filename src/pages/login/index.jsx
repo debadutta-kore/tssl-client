@@ -24,7 +24,7 @@ function Login() {
         url: "/auth/login",
         method: "POST",
         data: {
-          email: values.email,
+          email: values.email.toLowerCase(),
           password: values.password,
         },
       })

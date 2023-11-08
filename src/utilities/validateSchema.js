@@ -2,11 +2,14 @@ import * as Yup from 'yup';
 
 export const passwordSchema = Yup.string()
 .required('Password is required')
+.test('no-spaces', 'Password must not contain spaces', (value) => !/\s/.test(value))
 .min(8, 'Password must be at least 8 characters')
 .matches(
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
   'Password must contain at least one uppercase letter, one lowercase letter, and one number'
 );
+
+
 export const emailSchema = Yup.string()
 .required('Email is required')
 .email('Invalid email format');

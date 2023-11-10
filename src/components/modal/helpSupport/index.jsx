@@ -19,6 +19,33 @@ import { useDispatch } from "react-redux";
 const MAX_SIZE = 10 * 1024 * 1024;
 function HelpSupport(props) {
   const dispatch = useDispatch();
+
+  /**
+   *
+   * @param {Array} arr
+   * @returns
+   */
+  const markDuplicate = (attachments) => {
+    const fileNames = attachments.map((value)=>value.name);
+    const duplicateIndexSet = fileNames.reduce((output,ele,index)=>{
+      if(fileNames.indexOf(ele) !== index){
+        output.add(index);
+      }
+      return output
+    },new Set());
+    if(duplicateIndexSet.size === 0) {
+      return attachments;
+    } else {
+      return attachments.map((value,index) => {
+        if (duplicateIndexSet.has(index)) {
+          value.isDuplicate = true;
+        } else {
+          value.isDuplicate = false;
+        }
+        return value;
+      });
+    }
+  };
   const onSubmitForm = (value, action) => {
     const formData = new FormData();
     formData.append("subject", value.subject);
@@ -69,19 +96,28 @@ function HelpSupport(props) {
           subject: emailSubjectSchema,
           description: emailBodySchema,
           to: emailSchema,
-          attachments: Yup.array().test(
-            "attachments",
-            "Total size of attachments must be less than 10MB",
-            (attachments) => {
-              const totalSize = attachments.reduce(
-                (acc, attachment) => acc + attachment.size,
-                0
-              );
-              return totalSize <= MAX_SIZE;
-            }
-          ).test('is-unique', 'Duplicate files are not allowed', function (attachments) {
-            return attachments.length === new Set(attachments.map(attachment=>attachment.name)).size
-          }),
+          attachments: Yup.array()
+            .test(
+              "attachments",
+              "Total size of attachments must be less than 10MB",
+              (attachments) => {
+                const totalSize = attachments.reduce(
+                  (acc, attachment) => acc + attachment.size,
+                  0
+                );
+                return totalSize <= MAX_SIZE;
+              }
+            )
+            .test(
+              "is-unique",
+              "Duplicate files are not allowed",
+              function (attachments) {
+                return (
+                  attachments.length ===
+                  new Set(attachments.map((attachment) => attachment.name)).size
+                );
+              }
+            ),
         })}
       >
         {(formik) => (
@@ -198,13 +234,14 @@ function HelpSupport(props) {
                 </div>
                 {formik.values.attachments.length > 0 && (
                   <ul className={style["files-list-lg"]}>
-                    {formik.values.attachments.map((image, index) => (
+                    {markDuplicate(formik.values.attachments).map((image, index) => (
                       <UploadedImage
                         url={URL.createObjectURL(image)}
                         name={image.name}
                         key={index + "diwudeidc"}
+                        isDuplicate={image.isDuplicate}
                         removeImg={() => {
-                          formik.values.attachments.splice(index, 1)
+                          formik.values.attachments.splice(index, 1);
                           formik.setFieldValue(
                             "attachments",
                             formik.values.attachments

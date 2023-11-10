@@ -11,7 +11,8 @@ import NotFound from "./pages/notFound";
 function App() {
   return (<>
     <Routes>
-      <Route path="/" element={<Layout />} >
+      <Route path="/chat/:id" element={<ChatLayout />} />
+      <Route path="/*" element={<Layout />} >
         <Route element={<Navigate to='home' />} index />
         <Route path="home" element={<Home />} />
         <Route path="settings" element={<SettingsLayout />}>
@@ -19,7 +20,6 @@ function App() {
           <Route path='usecases' element={<UseCaseSettings />} />
           <Route path='access' element={<AccessControls />} />
         </Route>
-        <Route path="/chat/:id" element={<ChatLayout />} />
         <Route path="*" element={<NotFound/>}/>
       </Route>
     </Routes>

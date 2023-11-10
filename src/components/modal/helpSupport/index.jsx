@@ -9,15 +9,16 @@ import UploadedImage from "./uploadedImage";
 import * as Yup from "yup";
 import {
   emailBodySchema,
-  emailFileValidation,
   emailSchema,
   emailSubjectSchema,
 } from "../../../utilities/validateSchema";
 import request from "../../../utilities/request";
 import { toast } from "react-toastify";
 import InputField from "../../InputField";
-
+import { useDispatch } from "react-redux";
+const MAX_SIZE = 10 * 1024 * 1024;
 function HelpSupport(props) {
+  const dispatch = useDispatch();
   const onSubmitForm = (value, action) => {
     const formData = new FormData();
     formData.append("subject", value.subject);
@@ -38,13 +39,19 @@ function HelpSupport(props) {
     })
       .then(() => {
         toast("Your response sent successfully!", { type: "success" });
+        props.onClose();
       })
       .catch((error) => {
-        toast(error.message, { type: "error" });
+        if (error.response) {
+          if (error.response.status === 401) {
+            dispatch({ type: "reset" });
+            toast("Your session has expired", { type: "error" });
+          }
+        }
+        toast("Oops! Something went wrong try again", { type: "error" });
       })
       .finally(() => {
         action.setSubmitting(false);
-        props.onClose();
       });
   };
   return (
@@ -62,11 +69,28 @@ function HelpSupport(props) {
           subject: emailSubjectSchema,
           description: emailBodySchema,
           to: emailSchema,
-          attachments: Yup.array().of(emailFileValidation),
+          attachments: Yup.array().test(
+            "attachments",
+            "Total size of attachments must be less than 10MB",
+            (attachments) => {
+              const totalSize = attachments.reduce(
+                (acc, attachment) => acc + attachment.size,
+                0
+              );
+              return totalSize <= MAX_SIZE;
+            }
+          ).test('is-unique', 'Duplicate files are not allowed', function (attachments) {
+            return attachments.length === new Set(attachments.map(attachment=>attachment.name)).size
+          }),
         })}
       >
         {(formik) => (
-          <ModalBody style={{ marginBlock: formik.values.attachments.length === 0 ? "9rem" : "12rem" }}>
+          <ModalBody
+            style={{
+              marginBlock:
+                formik.values.attachments.length === 0 ? "8rem" : "13rem",
+            }}
+          >
             <Card>
               <div className={style["choose-user-header"]}>
                 <h2>Help & Support</h2>
@@ -129,6 +153,11 @@ function HelpSupport(props) {
                   <label
                     htmlFor="file-uploader"
                     className={style["form-field__file-uploader-label"]}
+                    style={{
+                      borderColor: formik.errors.attachments
+                        ? "red"
+                        : "#EAECF0",
+                    }}
                   >
                     <img
                       src={fileUploadIcon}
@@ -143,13 +172,20 @@ function HelpSupport(props) {
                       PNG or JPG images
                     </span>
                   </label>
+                  {formik.errors.attachments && (
+                    <span className={style["error-message"]}>
+                      {formik.errors.attachments}
+                    </span>
+                  )}
                   <input
                     type="file"
                     multiple={true}
                     accept="image/jpg, image/jpeg, image/png"
                     id="file-uploader"
                     style={{ display: "none" }}
+                    hidden={true}
                     name="attachments"
+                    value={undefined}
                     onChange={(e) => {
                       if (e?.target?.files && e.target.files.length > 0) {
                         formik.setFieldValue("attachments", [
@@ -166,13 +202,12 @@ function HelpSupport(props) {
                       <UploadedImage
                         url={URL.createObjectURL(image)}
                         name={image.name}
-                        key={index}
+                        key={index + "diwudeidc"}
                         removeImg={() => {
+                          formik.values.attachments.splice(index, 1)
                           formik.setFieldValue(
                             "attachments",
-                            formik.values.attachments.filter(
-                              (_, ind) => ind !== index
-                            )
+                            formik.values.attachments
                           );
                         }}
                       />

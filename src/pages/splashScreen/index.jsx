@@ -14,8 +14,6 @@ const SplashScreen = () => {
 
   useEffect(() => {
     if (!isLogin) {
-      document.body.style.background =
-        "url(/doughnut.svg) no-repeat center/contain #EBB8B8";
       dispatch(loginWithSession())
         .then(unwrapResult)
         .then((data) => {

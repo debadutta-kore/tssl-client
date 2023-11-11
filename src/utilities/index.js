@@ -38,3 +38,17 @@ export const requestErrorHandler = (thunkApi, err) => {
     });
   }
 };
+
+export const getPdfNameFromUrl = (pdfUrl) => {
+  console.log(pdfUrl);
+  const url = new URL(pdfUrl);
+  const pathSegments = url.pathname.split('/');
+
+  for (let i = pathSegments.length - 1; i >= 0; i--) {
+    if (pathSegments[i].endsWith('.pdf')) {
+      return pathSegments[i];
+    }
+  }
+
+  return '';
+};

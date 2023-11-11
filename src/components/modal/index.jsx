@@ -5,7 +5,7 @@ export const ModalBody = (props)=>{
 }
 function Modal(props) {
   return createPortal(
-    <div className={style["modal"]} style={props.style}>
+    <div className={style["modal"]} style={props.style} onClick={props.onClick}>
       {props.children}
     </div>,
     document.getElementById("modal")

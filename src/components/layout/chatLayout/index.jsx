@@ -63,7 +63,7 @@ function ChatLayout() {
       </Header>
       <main className={style["layout-container"]}>
         <iframe
-          srcDoc='<html><body><a href="https://www.africau.edu/images/default/sample.pdf">click it </a></body></html>'
+          src={usecaseInfo.url}
           width={"100%"}
           height={"100%"}
           onLoad={() => setShowSplash(false)}

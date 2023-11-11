@@ -6,7 +6,6 @@ function PdfViewer(props) {
     const innerDoc =
       ref.current.contentDocument || ref.current.contentWindow.document;
     innerDoc.getElementById("close-pdf").addEventListener("click", () => {
-      console.log("close-button-click");
       props.onClose();
     });
   };

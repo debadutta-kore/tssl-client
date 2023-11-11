@@ -18,12 +18,12 @@ function ChatLayout() {
   useEffect(() => {
     let noOfAnchor = 0;
     const onClickAnchor = (event) => {
+      // check if the url contains pdf or not
       if (getPdfNameFromUrl(event.target.href)) {
         event.preventDefault();
         event.stopPropagation();
         setPdfUrl(event.target.href);
       }
-      // get the pdf link that user clicked
     };
     const interval = setInterval(() => {
       if (ref !== null && ref.current) {

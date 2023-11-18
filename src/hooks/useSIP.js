@@ -73,7 +73,9 @@ function useSIP(config) {
         setCallState("end");
         setSession(null);
         hangupAudio.play();
-        setCallState("calling");
+        setTimeout(()=>{
+          setCallState("calling");
+        }, 500);
       });
       session.on("failed", function () {
         // unable to establish the call
@@ -82,7 +84,9 @@ function useSIP(config) {
         setCallState("end");
         setSession(null);
         hangupAudio.play();
-        setCallState("calling");
+        setTimeout(()=>{
+          setCallState("calling");
+        }, 500);
       });
     });
     phone.start();

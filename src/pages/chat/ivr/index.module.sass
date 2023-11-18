@@ -1,0 +1,104 @@
+@use '../../../sass/_mixins.sass' as mixins
+.dialer
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 100%
+    height: 100%
+    user-select: none
+    .dial-screen
+        display: flex
+        width: 100%
+        height: 100%
+        align-items: center
+        flex-direction: column
+        gap: 20px
+        position: relative
+        .call-screen-status
+            display: block
+            position: absolute
+            top: 3rem
+            text-align: center
+            h2
+                font-weight: 500
+                font-size: 30
+                margin-top: 2px
+        .dial-number
+            width: 15rem
+            border: none
+            outline: none
+            font-size: 30px
+            color: black
+            font-weight: 400
+            text-align: center
+            position: absolute
+            top: 5rem
+        .dialpad-container
+            display: flex
+            flex-direction: column
+            gap: 20px
+            position: absolute
+            bottom: 5rem
+        .dial-btn-container
+            display: grid
+            grid-template-columns: repeat(2, 50px)
+            gap: 30px
+            margin-left: auto
+            .delete-dialed-btn
+                @include mixins.button()
+        @include mixins.device-style($device: 'sm')
+            justify-content: center
+            .dial-number,.call-screen-status
+                position: relative
+                top: 0
+                margin-bottom: 3rem
+            .dialpad-container
+                position: relative
+                bottom: 0
+
+    .call-screen
+        display: flex
+        gap: 20px
+        flex-direction: column
+        text-align: center
+        align-items: center
+        width: 100%
+        height: 100%
+        position: relative
+        .call-screen-status
+            display: block
+            position: absolute
+            top: 3rem
+            h2
+                font-weight: 500
+                font-size: 30
+                margin-top: 2px
+        .call-dialpad-btns
+            display: grid
+            position: absolute
+            bottom: 5rem
+            grid-template-columns: repeat(3, 50px)
+            gap: 30px
+            margin-top: 3rem
+            .call-dialpad-button
+                position: relative
+                span
+                    text-align: center
+                    position: absolute
+                    font-size: 14px
+                    font-weight: 400
+                    left:0px
+                    right: 0px
+                    bottom: -1.3rem
+                &:last-child
+                    grid-column: 2
+                    grid-row: 2
+        @include mixins.device-style($device: 'sm')
+            justify-content: center
+            .call-screen-status
+                position: relative
+                top: 0
+                margin-bottom: 3rem
+            .call-dialpad-btns
+                position: relative
+                bottom: 0

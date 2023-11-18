@@ -7,13 +7,19 @@ import AccessControls from "./pages/settings/accessControls";
 import SettingsLayout from './components/layout/settingsLayout';
 import ChatLayout from "./components/layout/chatLayout";
 import NotFound from "./pages/notFound";
+import { lazy } from "react";
+const TextChat = lazy(()=>import('./pages/chat/text'))
+const IVRChat = lazy(()=>import('./pages/chat/ivr'));
 
 function App() {
   return (<>
     <Routes>
-      <Route path="/chat/:id" element={<ChatLayout />} />
+      <Route path="/chat" element={<ChatLayout />}>
+        <Route path="text" element={<TextChat/>}/>
+        <Route path="ivr" element={<IVRChat/>}/>
+      </Route>
       <Route path="/*" element={<Layout />} >
-        <Route element={<Navigate to='home' />} index />
+        <Route element={<Navigate to='/home' />} index />
         <Route path="home" element={<Home />} />
         <Route path="settings" element={<SettingsLayout />}>
           <Route index element={<Settings />} />

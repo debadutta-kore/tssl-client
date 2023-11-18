@@ -1,31 +1,29 @@
 import style from "./index.module.sass";
-function Button(props) {
+function Button({children, type, isLoading, className, ...props}) {
   const classes = [];
-  if (props.className) {
-    classes.push(style["btn"], props.className);
+  if (className) {
+    classes.push(style["btn"], className);
   } else {
     classes.push(style["btn"]);
   }
-  if (props.isLoading) {
+  if (isLoading) {
     classes.push(style["loading-button"]);
   }
   
   return (
     <button
       className={classes.join(" ")}
-      type={props.type ? props.type : "button"}
-      style={props.style}
-      onClick={props.onClick}
-      disabled={props.disabled}
+      type={type || "button"}
+      {...props}
     >
-      {props.isLoading ? (
+      {isLoading ? (
         <>
           <span className={style["dot"]}></span>
           <span className={style["dot"]}></span>
           <span className={style["dot"]}></span>
         </>
       ) : (
-        props.children
+        children
       )}
     </button>
   );

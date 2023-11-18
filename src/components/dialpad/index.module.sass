@@ -1,0 +1,24 @@
+@use '../../sass/_mixins.sass' as mixins
+.dialpad 
+    display: grid
+    grid-template-columns: repeat(3,50px)
+    gap: 30px
+.dialpad-button
+    &.active
+        animation: dialpad-button-hover 0.2s 0s ease
+    @include mixins.device-style($device: 'lg')
+        &.active
+            animation: none
+        &:hover
+            background: #101828
+            color: #FFFFFF
+            transition: all 0.8s ease
+        
+
+@keyframes dialpad-button-hover
+    0%
+        background: #101828
+        color: #FFFFFF
+    100%
+        background: initial
+        color: initital

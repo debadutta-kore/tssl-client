@@ -3,7 +3,6 @@ import style from "./index.module.sass";
 import deleteIcon from "../../../assets/icons/delete.svg";
 import Switch from "../../switch";
 import { useState } from "react";
-import usecaseDb from "../../../utilities/static-usecases.json";
 import ConfirmDeleteUsecase from "../../modal/confirmations/ConfirmdeleteUsecase";
 import { useDispatch } from "react-redux";
 import { updateUsecase } from "../../../app/features/usecaseSlice";
@@ -14,14 +13,12 @@ import { debounce } from "../../../utilities";
 function UsecaseSetting(props) {
   const dispatch = useDispatch();
   const [isDelete, setIsDelete] = useState(false);
-
-  const info = usecaseDb.find((usecase) => usecase.id === props.usecaseId);
   const onChangeStatus = debounce((event) => {
     const checked = event.target.checked;
     const status = checked ? "enabled" : "disabled";
     dispatch(
       updateUsecase({
-        id: info.id,
+        id: props.usecaseId,
         enable: checked,
       })
     )
@@ -34,7 +31,7 @@ function UsecaseSetting(props) {
         }
       })
       .catch(() => {
-        toast(`Unable to ${status} ${info.name} usecase`, { type: "error" });
+        toast(`Unable to ${status} ${props.name} usecase`, { type: "error" });
         if (event.target) {
           event.target.checked = !checked;
         }
@@ -45,19 +42,18 @@ function UsecaseSetting(props) {
     <Card className={style["setting-cards"]} style={{animationDelay: props.animationDelay}}>
       {isDelete && (
         <ConfirmDeleteUsecase
-          delete={{ id: props.id, name: info.name }}
+          delete={{ id: props.id, name: props.name }}
           onClose={() => setIsDelete(!isDelete)}
         />
       )}
       <div className={style["card-heading"]}>
         <div className={style["info"]}>
-          <span className={style["name"]}>{info.name}</span>
-          <span
+          <span className={style["name"]}>{props.name}</span>
+          {props.isComingSoon===1 && <span
             className={style["status"]}
-            style={{ display: info.isComingSoon ? "inline" : "none" }}
           >
             (Coming Soon)
-          </span>
+          </span>}
         </div>
         <div>
           <Switch

@@ -1,7 +1,11 @@
 import style from "./index.module.sass";
-function Card(props){
-    return <div className={props.className?`${style.card} ${props.className}`:style.card} style={props.style}>
-        {props.children}
+function Card({children, className, ...props}){
+    const classes = [style.card];
+    if(className) {
+        classes.push(className);
+    }
+    return <div className={classes.join(' ')} {...props}>
+        {children}
     </div>
 }
 export default Card;

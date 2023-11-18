@@ -52,7 +52,9 @@ const router = createBrowserRouter([
       </ProtectRoute>
     ),
   },
-]);
+],{
+  basename: import.meta.env.VITE_BASEPATH
+});
 const changeIcon = ({type})=>{
   let icon;
   if(type==='success') {

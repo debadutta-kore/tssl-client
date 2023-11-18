@@ -15,7 +15,6 @@ import { unwrapResult } from "@reduxjs/toolkit";
 function Component(props) {
   const [addUsecase, setAddUsecase] = useState(false);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(fetchAllUsecases())
       .then(unwrapResult)
@@ -24,8 +23,9 @@ function Component(props) {
           toast(err.message, { type: "error" });
         }
       });
-  }, [dispatch]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   const filteredUsecase = props.usecases.filter(({ enable }) => enable === 1);
   let placeHolder;
   if (filteredUsecase.length === 0) {

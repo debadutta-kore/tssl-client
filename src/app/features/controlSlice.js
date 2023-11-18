@@ -6,7 +6,7 @@ export const fetchControl = createAsyncThunk(
   "fetchControls",
   async (arg, thunkApi) => {
     return await request({
-      url: "/account/user/details",
+      url: "/account/details",
       method: "GET",
     }).then((res)=> thunkApi.fulfillWithValue(res.data))
     .catch(requestErrorHandler.bind(null, thunkApi))
@@ -27,7 +27,7 @@ export const updateAccess = createAsyncThunk(
   "updateAccess",
   async (arg, thunkApi) => {
     return await request({
-      url: "/account/user/access",
+      url: "/account/access",
       method: "PUT",
       data: {
         enable: arg.enable ? 1 : 0,

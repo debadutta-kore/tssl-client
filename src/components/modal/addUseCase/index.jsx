@@ -6,17 +6,20 @@ import selectIcon from "../../../assets/icons/select.svg";
 import Button from "../../button";
 import Modal, { ModalBody } from "..";
 import { useEffect, useRef, useState } from "react";
-import usecasesDb from "../../../utilities/static-usecases.json";
 import { useDispatch, useSelector } from "react-redux";
 import { addUsecase } from "../../../app/features/usecaseSlice";
 import { toast } from "react-toastify";
 import { unwrapResult } from "@reduxjs/toolkit";
+import request from "../../../utilities/request";
+import LoadingSpinner from "../../loadingSpinner";
 
 function AddUseCase(props) {
   const [openDropDown, setOpenDropDown] = useState(false);
-  const usecases = useSelector((state) => state.usecases.usecases);
   const [selectedUseCase, setSelectedUseCase] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [availableUsecases, setAvailableUsecases] = useState([]);
+  const [isSubmitting, setSumbmitting] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const usecases = useSelector((state) => state.usecases.usecases);
   const dispatch = useDispatch();
   const ref = useRef(null);
 
@@ -26,7 +29,7 @@ function AddUseCase(props) {
      */
     function handleClickOutside(event) {
       if (ref.current && ref.current.contains(event.target)) {
-        setOpenDropDown(!openDropDown);
+        setOpenDropDown((openDropDown) => !openDropDown);
       } else {
         setOpenDropDown(false);
       }
@@ -37,9 +40,35 @@ function AddUseCase(props) {
       // Unbind the event listener on clean up
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [openDropDown]);
+  }, []);
 
-  const notAddedUsecases = usecasesDb.filter(({ id }) => {
+  useEffect(() => {
+      setLoading(true);
+      const controller = new AbortController();
+      request({
+        url: "/usecase/available",
+        method: "GET",
+        signal: controller.signal
+      })
+        .then((res) => {
+          setAvailableUsecases(res.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            dispatch({ type: "reset" });
+            toast("Your session has expired", { type: "error" });
+          } else {
+            toast("Something Went Wrong", { type: "error" }); 
+          }
+        });
+      return () => {
+        controller.abort();
+      };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const notAddedUsecases = availableUsecases.filter(({ id }) => {
     let isPresent = false;
     for (const { usecaseId } of usecases) {
       if (usecaseId === id) {
@@ -50,7 +79,7 @@ function AddUseCase(props) {
   });
 
   const onSaveUsecase = () => {
-    setIsLoading(true);
+    setSumbmitting(true);
     dispatch(
       addUsecase({
         usecaseId: selectedUseCase.id,
@@ -68,7 +97,7 @@ function AddUseCase(props) {
         }
       })
       .finally(() => {
-        setIsLoading(false);
+        setSumbmitting(false);
         props.onClose();
       });
   };
@@ -82,7 +111,7 @@ function AddUseCase(props) {
             <button
               className={style["modal-header__close"]}
               onClick={props.onClose}
-              disabled={isLoading}
+              disabled={isSubmitting}
             >
               <img src={closeModal} width={40} height={40} alt="close-modal" />
             </button>
@@ -130,55 +159,75 @@ function AddUseCase(props) {
                   }
                 />
               </div>
-              <ul
-                className={style["dropdown-options"]}
-                style={{ display: openDropDown ? "flex" : "none" }}
-              >
-                {notAddedUsecases.map((usecase) => (
-                  <li
-                    className={
-                      selectedUseCase && usecase.id === selectedUseCase.id
-                        ? `${style["dropdown-options__selection"]} ${style["selected"]}`
-                        : style["dropdown-options__selection"]
-                    }
-                    key={usecase.id}
-                    onClick={() => {
-                      setSelectedUseCase({
-                        id: usecase.id,
-                        name: usecase.name,
-                        isComingSoon: usecase.isComingSoon,
-                      });
-                    }}
-                  >
-                    <div className={style["dropdown-options__selection__info"]}>
-                      <span
+              {openDropDown && (
+                <ul
+                  className={style["dropdown-options"]}
+                  style={
+                    isLoading || notAddedUsecases ? { height: "190px" } : {}
+                  }
+                >
+                  {notAddedUsecases.length > 0 ? (
+                    notAddedUsecases.map((usecase) => (
+                      <li
                         className={
-                          style["dropdown-options__selection__info__name"]
+                          selectedUseCase && usecase.id === selectedUseCase.id
+                            ? `${style["dropdown-options__selection"]} ${style["selected"]}`
+                            : style["dropdown-options__selection"]
                         }
+                        key={usecase.id}
+                        onClick={() => {
+                          setSelectedUseCase({
+                            id: usecase.id,
+                            name: usecase.name,
+                            isComingSoon: usecase.isComingSoon,
+                          });
+                        }}
                       >
-                        {usecase.name}
-                      </span>
-                      {usecase.isComingSoon && (
-                        <span
-                          className={
-                            style["dropdown-options__selection__info__status"]
-                          }
+                        <div
+                          className={style["dropdown-options__selection__info"]}
                         >
-                          (Coming Soon)
+                          <span
+                            className={
+                              style["dropdown-options__selection__info__name"]
+                            }
+                          >
+                            {usecase.name}
+                          </span>
+                          {usecase.isComingSoon === 1 && (
+                            <span
+                              className={
+                                style[
+                                  "dropdown-options__selection__info__status"
+                                ]
+                              }
+                            >
+                              (Coming Soon)
+                            </span>
+                          )}
+                        </div>
+                        <img src={selectIcon} alt="selected icon" />
+                      </li>
+                    ))
+                  ) : (
+                    <li className={style["dropdown-options__emptyplaceholder"]}>
+                      {isLoading ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <span style={{ color: "#667085" }}>
+                          No use case is available yet
                         </span>
                       )}
-                    </div>
-                    <img src={selectIcon} alt="selected icon" />
-                  </li>
-                ))}
-              </ul>
+                    </li>
+                  )}
+                </ul>
+              )}
             </div>
           </div>
           <div className={style["btn-container"]}>
             <Button
               className={style["btn-cancel"]}
               onClick={props.onClose}
-              disabled={isLoading}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
@@ -186,7 +235,7 @@ function AddUseCase(props) {
               className={style["btn-submit"]}
               onClick={onSaveUsecase}
               disabled={!selectedUseCase}
-              isLoading={isLoading}
+              isLoading={isSubmitting}
             >
               Save
             </Button>

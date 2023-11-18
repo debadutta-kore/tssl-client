@@ -19,24 +19,23 @@ import { useDispatch } from "react-redux";
 const MAX_SIZE = 10 * 1024 * 1024;
 function HelpSupport(props) {
   const dispatch = useDispatch();
-
   /**
    *
    * @param {Array} arr
    * @returns
    */
   const markDuplicate = (attachments) => {
-    const fileNames = attachments.map((value)=>value.name);
-    const duplicateIndexSet = fileNames.reduce((output,ele,index)=>{
-      if(fileNames.indexOf(ele) !== index){
+    const fileNames = attachments.map((value) => value.name);
+    const duplicateIndexSet = fileNames.reduce((output, ele, index) => {
+      if (fileNames.indexOf(ele) !== index) {
         output.add(index);
       }
-      return output
-    },new Set());
-    if(duplicateIndexSet.size === 0) {
+      return output;
+    }, new Set());
+    if (duplicateIndexSet.size === 0) {
       return attachments;
     } else {
-      return attachments.map((value,index) => {
+      return attachments.map((value, index) => {
         if (duplicateIndexSet.has(index)) {
           value.isDuplicate = true;
         } else {
@@ -69,18 +68,18 @@ function HelpSupport(props) {
         props.onClose();
       })
       .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 401) {
-            dispatch({ type: "reset" });
-            toast("Your session has expired", { type: "error" });
-          }
+        if (error.response && error.response.status === 401) {
+          dispatch({ type: "reset" });
+          toast("Your session has expired", { type: "error" });
+        } else {
+          toast("Oops! Something went wrong try again", { type: "error" });
         }
-        toast("Oops! Something went wrong try again", { type: "error" });
       })
       .finally(() => {
         action.setSubmitting(false);
       });
   };
+
   return (
     <Modal>
       <Formik
@@ -122,10 +121,7 @@ function HelpSupport(props) {
       >
         {(formik) => (
           <ModalBody
-            style={{
-              marginBlock:
-                formik.values.attachments.length === 0 ? "8rem" : "13rem",
-            }}
+            className={style['helpsupport-modal-body']}
           >
             <Card>
               <div className={style["choose-user-header"]}>
@@ -234,21 +230,23 @@ function HelpSupport(props) {
                 </div>
                 {formik.values.attachments.length > 0 && (
                   <ul className={style["files-list-lg"]}>
-                    {markDuplicate(formik.values.attachments).map((image, index) => (
-                      <UploadedImage
-                        url={URL.createObjectURL(image)}
-                        name={image.name}
-                        key={index + "diwudeidc"}
-                        isDuplicate={image.isDuplicate}
-                        removeImg={() => {
-                          formik.values.attachments.splice(index, 1);
-                          formik.setFieldValue(
-                            "attachments",
-                            formik.values.attachments
-                          );
-                        }}
-                      />
-                    ))}
+                    {markDuplicate(formik.values.attachments).map(
+                      (image, index) => (
+                        <UploadedImage
+                          url={URL.createObjectURL(image)}
+                          name={image.name}
+                          key={index + "diwudeidc"}
+                          isDuplicate={image.isDuplicate}
+                          removeImg={() => {
+                            formik.values.attachments.splice(index, 1);
+                            formik.setFieldValue(
+                              "attachments",
+                              formik.values.attachments
+                            );
+                          }}
+                        />
+                      )
+                    )}
                   </ul>
                 )}
                 <div className={style["btn-container"]}>

@@ -6,7 +6,6 @@ function UploadedImage(props) {
   const [name, ext] = props.name.split(".");
   const imgName =
     name.substr(0, 6) + (name.length <= 6 ? "." + ext : "..." + ext);
-  console.log(props.isDuplicate);
   return (
     <li
       className={

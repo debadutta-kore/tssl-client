@@ -7,9 +7,9 @@
     left: 0px
     right: 0px
     z-index: 10
-    overflow-y: scroll
+    overflow-y: auto
     .modal-body
-        width: 90%
+        width: 95%
         height: 100%
         display: flex
         align-items: center
@@ -17,7 +17,7 @@
         margin-inline: auto
         @include mixins.device-style($device: 'sm')
             width: 60%
-        @include mixins.device-style($device: 'sm')
+        @include mixins.device-style($device: 'md')
             width: 50%
         @include mixins.device-style($device: 'lg')
-            width: 40%
+            width: 500px

@@ -6,7 +6,7 @@ export const createUser = createAsyncThunk(
   "createUser",
   async (arg, thunkApi) => {
     return await request({
-      url: "/account/user",
+      url: "/account/add",
       method: "POST",
       data: {
         email: arg.email,
@@ -39,7 +39,7 @@ export const deleteUser = createAsyncThunk(
   "deleteUser",
   async (arg, thunkApi) => {
     return await request({
-      url: `/account/user/${arg.userId}`,
+      url: `/account/${arg.userId}`,
       method: "DELETE",
     })
       .then(() => thunkApi.fulfillWithValue())
@@ -66,7 +66,7 @@ export const fetchAllUser = createAsyncThunk(
   "fetchAllUsers",
   async (arg, thunkApi) => {
     return await request({
-      url: "/account/user",
+      url: "/account/all",
       method: "GET",
     })
       .then((res) => thunkApi.fulfillWithValue(res.data))

@@ -1,6 +1,14 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import request from "../../utilities/request";
-import { requestErrorHandler } from "../../utilities";
+import {
+  generateUnrepeatedRandomNumbers,
+  requestErrorHandler,
+  usecaseBackgrounds,
+} from "../../utilities";
+const randomNumberGenerator = generateUnrepeatedRandomNumbers(
+  0,
+  usecaseBackgrounds.length - 1
+);
 
 export const addUsecase = createAsyncThunk(
   "addUsecase",
@@ -95,7 +103,7 @@ export const updateUsecase = createAsyncThunk(
 
 const initialState = {
   isLoading: false,
-  usecases: [],
+  usecases: []
 };
 
 const usecaseSlice = createSlice({
@@ -103,12 +111,18 @@ const usecaseSlice = createSlice({
   initialState,
   reducers: {
     resetUsecase() {
-      return initialState;
+      return {
+        isLoading: false,
+        usecases: [],
+      };
     },
   },
   extraReducers: (builder) => {
     builder.addCase(addUsecase.fulfilled, (state, action) => {
-      state.usecases.push(action.payload);
+      state.usecases.push({
+        ...action.payload,
+        theme: usecaseBackgrounds[randomNumberGenerator.next().value],
+      });
       state.isLoading = false;
     });
 
@@ -130,7 +144,10 @@ const usecaseSlice = createSlice({
     });
 
     builder.addCase(fetchAllUsecases.fulfilled, (state, action) => {
-      state.usecases = action.payload;
+      state.usecases = action.payload.map((usecase) => ({
+        ...usecase,
+        theme: usecaseBackgrounds[randomNumberGenerator.next().value],
+      }));
       state.isLoading = false;
     });
 
@@ -164,6 +181,6 @@ const usecaseSlice = createSlice({
   },
 });
 
-export const { resetUsecase } = usecaseSlice.actions;
+export const { resetUsecase, saveAvailableUsecase } = usecaseSlice.actions;
 
 export default usecaseSlice.reducer;

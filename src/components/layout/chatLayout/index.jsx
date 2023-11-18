@@ -2,76 +2,47 @@ import Header from "../../header";
 import arrow from "../../../assets/icons/Arrow Back.svg";
 import settingStyle from "../settingsLayout/index.module.sass";
 import style from "./index.module.sass";
-import { useNavigate, useParams } from "react-router-dom";
-import usecaseDb from "../../../utilities/static-usecases.json";
-import ChatSplashScreen from "../../modal/chatSplashScreen";
-import { useEffect, useRef, useState } from "react";
-import PdfViewer from "../../modal/pdfViewer";
-import { getPdfNameFromUrl } from "../../../utilities";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Suspense } from "react";
+import ChatSplashScreen from "../../chatSplashScreen";
+
 function ChatLayout() {
-  const [showSplash, setShowSplash] = useState(true);
-  const [pdfUrl, setPdfUrl] = useState("");
   const navigate = useNavigate();
-  const params = useParams();
-  const ref = useRef();
+  const location = useLocation();
+  const usecases = useSelector((state) => state.usecases.usecases);
+  if (!location?.state?.id) {
+    return <Navigate to="/home" />;
+  } else {
+    const usecaseInfo = usecases.find(({ id }) => location.state.id === id);
 
-  useEffect(() => {
-    let noOfAnchor = 0;
-    const onClickAnchor = (event) => {
-      // check if the url contains pdf or not
-      if (getPdfNameFromUrl(event.target.href)) {
-        event.preventDefault();
-        event.stopPropagation();
-        setPdfUrl(event.target.href);
-      }
-    };
-    const interval = setInterval(() => {
-      if (ref !== null && ref.current) {
-        const innerDoc =
-          ref.current.contentDocument || ref.current.contentWindow.document;
-        if (innerDoc) {
-          const anchors = innerDoc.body.querySelectorAll("a");
-          if (anchors.length != noOfAnchor) {
-            anchors.forEach((anchor) => {
-              anchor.removeEventListener("click", onClickAnchor);
-            });
-            anchors.forEach((anchor) => {
-              anchor.addEventListener("click", onClickAnchor);
-            });
-            noOfAnchor = anchors.length;
-          }
-        }
-      } else {
-        clearInterval(interval);
-      }
-    }, 500);
-  }, []);
-
-  const usecaseInfo = usecaseDb.find(({ id }) => params.id === id);
-
-  return (
-    <>
-      {pdfUrl && <PdfViewer url={pdfUrl} onClose={() => setPdfUrl('')} />}
-      {showSplash && <ChatSplashScreen {...usecaseInfo} />}
-      <Header>
-        <nav className={settingStyle["nav-bar"]}>
-          <button onClick={() => navigate(-1)}>
-            <img src={arrow} alt="back" width={30} height={30} />
-          </button>
-          <h3>{usecaseInfo.name}</h3>
-        </nav>
-      </Header>
-      <main className={style["layout-container"]}>
-        <iframe
-          src={usecaseInfo.url}
-          width={"100%"}
-          height={"100%"}
-          onLoad={() => setShowSplash(false)}
-          ref={ref}
-        ></iframe>
-      </main>
-    </>
-  );
+    return (
+      <>
+        <Header>
+          <nav className={settingStyle["nav-bar"]}>
+            <button onClick={() => navigate(-1)}>
+              <img src={arrow} alt="back" width={30} height={30} />
+            </button>
+            <h3>{usecaseInfo.name}</h3>
+          </nav>
+        </Header>
+        <main className={style["layout-container"]}>
+          <Suspense
+            fallback={
+              <ChatSplashScreen
+                icon={usecaseInfo.icon}
+                name={usecaseInfo.name}
+                theme={usecaseInfo.theme}
+              />
+            }
+            maxDuration={2000}
+          >
+            <Outlet context={{ usecaseInfo }} />
+          </Suspense>
+        </main>
+      </>
+    );
+  }
 }
 
 export default ChatLayout;

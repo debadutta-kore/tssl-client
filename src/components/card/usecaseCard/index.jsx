@@ -1,25 +1,39 @@
 import Card from "..";
 import style from "./index.module.sass";
-import usecaseDb from "../../../utilities/static-usecases.json";
 import { Link } from "react-router-dom";
 function UseCaseCard(props) {
-  const info = usecaseDb.find((usecase) => usecase.id === props.usecaseId);
-  
+
+  let chatType = props.type;
+  if (props.type === "websdk") {
+    chatType = "text";
+  } else {
+    chatType = props.type;
+  }
   return (
-    <Link to={info.isComingSoon ? "#" : `/chat/${info.id}`} onClick={(e)=>info.isComingSoon && e.preventDefault()}>
-      <Card className={style["usecaseCard"]} style={{animationDelay: props.animationDelay}}>
+    <Link
+      to={props.isComingSoon ? "#" : `/chat/${chatType}`}
+      state={{ id: props.id }}
+      onClick={(e) => props.isComingSoon && e.preventDefault()}
+    >
+      <Card
+        className={style["usecaseCard"]}
+        style={{ animationDelay: props.animationDelay }}
+      >
         <div
           className={style["overlay"]}
-          style={{ background: info.background }}
+          style={{
+            background: `linear-gradient(137.55deg, ${props.theme} -4.46%, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, #FFFFFF, #FFFFFF)`,
+          }}
         ></div>
         <div
           className={style["card-content"]}
-          style={{ padding: info.icon ? "initial" : "50px" }}
         >
-          {info.icon && <img src={'/usecaseIcons/'+info.icon} width={80} height={80} />}
-          <h3>{info.name}</h3>
+          {props.icon && (
+            <img src={`${import.meta.env.VITE_BASEPATH}usecaseIcons/${props.icon}`} width={80} height={80} />
+          )}
+          <h3>{props.name}</h3>
         </div>
-        {info.isComingSoon && <span>Coming soon</span>}
+        {props.isComingSoon === 1 && <span>Coming soon</span>}
       </Card>
     </Link>
   );

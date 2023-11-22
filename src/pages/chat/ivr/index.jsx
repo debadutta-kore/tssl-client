@@ -128,16 +128,16 @@ function IVRChat() {
         <form className={style["dial-screen"]} onSubmit={onSumitHandler}>
           <input
             type="text"
-            disabled
             className={style["dial-number"]}
             name="phone"
             value={input.formatedInput}
             ref={inputRef}
+            readOnly
           />
           <div className={style["dialpad-container"]}>
             <DialPad onKeyPress={onEnterNumber} />
             <div className={style["dial-btn-container"]}>
-              <DialPadButton style={{ background: "#34C759" }} type="submit">
+              <DialPadButton style={{ background: "#34C759" }} type="submit" disabled={input.rawInput===''}>
                 <img src={callIcon} alt="call-icon" width="20" height="20" />
               </DialPadButton>
               <button
@@ -215,10 +215,10 @@ function IVRChat() {
           {input.rawInput ? (
             <input
               type="text"
-              disabled
               className={style["dial-number"]}
               ref={inputRef}
               value={input.rawInput}
+              readOnly
             />
           ) : (
             <div className={style["call-screen-status"]}>

@@ -49,14 +49,14 @@ const SplashScreen = () => {
           });
       })
       .catch((err) => {
-        if (err && err.status === 401) {
-          navigate("/auth/login", {
-            state: { isLoginFailed: true },
-            replace: true,
-          });
-        } else if (err.name !== "ConditionError") {
+        if (err.name !== "ConditionError") {
           toast(err.message, { type: "error" });
         }
+        //Navigate to login if anything goes wrong
+        navigate("/auth/login", {
+          state: { isLoginFailed: true },
+          replace: true,
+        });
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
